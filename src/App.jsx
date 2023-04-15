@@ -1,10 +1,9 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import { React , useState, useEffect } from "react";
 import Scrollbar from "./components/Scrollbar Components/Scrollbar";
 import styles from "./App.module.css";
 import * as ph from "./utils.js";
 import RuleBox from "./components/RuleBox Components/RuleBox";
-import Modal from "./components/Scrollbar Components/Modal";
+import Modal from "./components/Modal";
 import ItemEditForm from "./components/Scrollbar Components/ItemEditForm";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

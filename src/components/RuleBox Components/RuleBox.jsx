@@ -1,4 +1,4 @@
-import ItemSVG from "../Scrollbar Components/ItemSVG";
+import ItemSVG from "../ItemSVG";
 import styles from "./RuleBox.module.css";
 import ArrowSVG from "./ArrowSVG";
 
