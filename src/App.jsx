@@ -9,7 +9,8 @@ import Modal from "./components/Scrollbar Components/Modal";
 import ItemEditForm from "./components/Scrollbar Components/ItemEditForm";
 
 function App() {
-  const [itemList, setItemList] = useState(ph.generateRandomItems(10));
+  const [baseItemList, setBaseItemList] = useState(ph.generateRandomItems(5));
+  const [itemList, setItemList] = useState(baseItemList);
   const [ModalData, setModalData] = useState({
     isVisible: false,
     color: "default",
@@ -19,9 +20,9 @@ function App() {
   function generateNewDataset(length) {
     console.log("Generating new dataset");
     const newDataset = ph.generateRandomItems(length);
+    setBaseItemList(newDataset);
     setItemList(newDataset);
   }
-
   function hideModalHandler() {
     setModalData({ isVisible: false, color: "default", shape: "default" , index:-1});
   }
@@ -36,14 +37,20 @@ function App() {
     newItemList.splice(ModalData.index, 1);
     setItemList(newItemList);
     hideModalHandler();
-    update(newItemList);
   }
   function addItemHandler() {
     const newItemList = [...itemList];
     newItemList.push({ color: "default", shape: "default" });
     setItemList(newItemList);
     hideModalHandler();
-    update(newItemList);
+  }
+  function checkIfValid() {
+    if (ph.itemListEquals(baseItemList, itemList)) {
+      console.log("Success");
+    }
+    else{
+      console.log("Failure");
+    }
   }
 
   return (
@@ -65,7 +72,7 @@ function App() {
       </div>
 
       <div className={styles.scrollbar}>
-        <Scrollbar itemList={itemList} editable={false} />
+        <Scrollbar itemList={baseItemList} editable={false} />
       </div>
 
       <div className={styles.text}>
@@ -97,6 +104,7 @@ function App() {
         <button
           className={styles.action}
           disabled={ph.containsDefault(itemList)}
+          onClick={checkIfValid}
         >
           Submit
         </button>
