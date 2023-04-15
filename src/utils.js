@@ -1,5 +1,3 @@
-export const pi = 3.14;
-
 export function containsDefault(arr) {
   return (
     arr.some((e) => e.color == "default") ||
@@ -19,4 +17,18 @@ export function generateRandomItems(count) {
     });
   }
   return items;
+}
+
+export function itemListEquals(itemList1, itemList2) {
+  if (itemList1.length !== itemList2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < itemList1.length; i++) {
+    if (itemList1[i].color !== itemList2[i].color || itemList1[i].shape !== itemList2[i].shape) {
+      return false;
+    }
+  }
+
+  return true;
 }
