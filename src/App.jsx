@@ -1,5 +1,5 @@
 import React from "react";
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 import Scrollbar from "./components/Scrollbar Components/Scrollbar";
 import styles from "./App.module.css";
 import * as ph from "./utils.js";
@@ -35,7 +35,6 @@ function App() {
     hideModalHandler();
   }
 
-
   const [ModalData, setModalData] = useState({
     isVisible: false,
     color: "default",
@@ -51,7 +50,6 @@ function App() {
     });
   }
 
-
   const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
   function generateNewRule() {
     const newRule = ph.generateRandomRule(baseItemList);
@@ -65,7 +63,6 @@ function App() {
     resetTimer();
   }
 
-
   const [isPaused, setPaused] = useState(false);
   function pauseTimer() {
     setPaused(true);
@@ -74,13 +71,12 @@ function App() {
     setPaused(false);
   }
 
-
-  const [seconds, setSeconds] = useState(0);  
+  const [seconds, setSeconds] = useState(0);
   useEffect(() => {
     let interval;
     if (!isPaused) {
       interval = setInterval(() => {
-        setSeconds(seconds => seconds + 1);
+        setSeconds((seconds) => seconds + 1);
       }, 1000);
     }
     return () => clearInterval(interval);
@@ -90,12 +86,13 @@ function App() {
     resumeTimer();
   }
   function formatTime(totalSeconds) {
-    const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
-    const remainingSeconds = (totalSeconds % 60).toString().padStart(2, '0');
+    const minutes = Math.floor(totalSeconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const remainingSeconds = (totalSeconds % 60).toString().padStart(2, "0");
     return `${minutes}:${remainingSeconds}`;
   }
 
-  
   function submit() {
     if (ph.checkRule(rule, baseItemList, itemList)) {
       toast.success("Correct!", {
@@ -118,7 +115,6 @@ function App() {
       });
     }
   }
-
 
   return (
     <main>
@@ -163,10 +159,14 @@ function App() {
           Generate new rule
         </button>
         {!isPaused ? (
-        <button className={styles.action} onClick={pauseTimer}>Pause</button>
-      ) : (
-        <button className={styles.action} onClick={resumeTimer}>Resume</button>
-      )}
+          <button className={styles.action} onClick={pauseTimer}>
+            Pause
+          </button>
+        ) : (
+          <button className={styles.action} onClick={resumeTimer}>
+            Resume
+          </button>
+        )}
         <button
           className={styles.action}
           disabled={ph.containsDefault(itemList)}
@@ -175,7 +175,7 @@ function App() {
           Submit
         </button>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </main>
   );
 }
