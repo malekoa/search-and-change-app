@@ -1,4 +1,6 @@
 import { React , useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import RuleBox from "./components/RuleBox Components/RuleBox";
 import Modal from "./components/Modal Components/Modal";
@@ -7,8 +9,6 @@ import ItemEditForm from "./components/Modal Components/ItemEditForm";
 
 import styles from "./App.module.css";
 import * as ph from "./utils.js";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const length = 20;
 
@@ -96,8 +96,7 @@ function App() {
   }
 
   function submit() {
-    console.log("submit")
-    if (ph.checkRule(rule, baseItemList, itemList)) {
+    if (ph.checkRule(rule, [...baseItemList], [...itemList])) {
       toast.success("Correct!", {
         position: "top-center",
         autoClose: 1000,
