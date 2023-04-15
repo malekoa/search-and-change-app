@@ -8,17 +8,23 @@ import RuleBox from "./components/RuleBox";
 import Modal from "./components/Scrollbar Components/Modal";
 import ItemEditForm from "./components/Scrollbar Components/ItemEditForm";
 
+const length = 5;
+
 function App() {
-  const [baseItemList, setBaseItemList] = useState(ph.generateRandomItems(5));
+  const [baseItemList, setBaseItemList] = useState(ph.generateRandomItems(length));
   const [itemList, setItemList] = useState(baseItemList);
+  const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
   const [ModalData, setModalData] = useState({
     isVisible: false,
     color: "default",
     shape: "default",
     index:  -1
   });
-  function generateNewDataset(length) {
-    console.log("Generating new dataset");
+  function generateNewRule() {
+    const newRule = ph.generateRandomRule(baseItemList);
+    setRule(newRule);
+  }
+  function generateNewDataset() {
     const newDataset = ph.generateRandomItems(length);
     setBaseItemList(newDataset);
     setItemList(newDataset);
@@ -76,13 +82,7 @@ function App() {
       </div>
 
       <div className={styles.text}>
-        <RuleBox
-          inr={ph.generateRandomItems(1)[0]}
-          trm={ph.generateRandomItems(1)[0]}
-          dir={"Right"}
-          inp={"inr"}
-          out={ph.generateRandomItems(1)[0]}
-        />
+        <RuleBox rule={rule}/>
       </div>
 
       <div className={styles.scrollbar}>
@@ -97,7 +97,13 @@ function App() {
       <div className={styles.actionscontainer}>
         <button
           className={styles.action}
-          onClick={() => generateNewDataset(10)}
+          onClick={generateNewDataset}
+        >
+          Generate new dataset
+        </button>
+        <button
+          className={styles.action}
+          onClick={generateNewRule}
         >
           Generate new rule
         </button>
