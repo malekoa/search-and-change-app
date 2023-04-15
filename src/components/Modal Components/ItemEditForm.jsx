@@ -1,6 +1,8 @@
 import styles from "./ItemEditForm.module.css";
 import { useState } from "react";
 import ItemSVG from "../SVGs/ItemSVG";
+import { availableColors , availableShapes } from "../../utils";
+
 
 function ItemEditForm({
   onCancel,
@@ -44,10 +46,9 @@ function ItemEditForm({
               <option value="default" disabled hidden>
                 Choose a color
               </option>
-              <option value="red">Red</option>
-              <option value="blue">Blue</option>
-              <option value="green">Green</option>
-              <option value="orange">Orange</option>
+              {availableColors.map((color) => (
+                <option value={color}>{color.charAt(0).toUpperCase() + color.slice(1)}</option>
+              ))}
             </select>
           </label>
 
@@ -57,10 +58,9 @@ function ItemEditForm({
               <option value="default" disabled hidden>
                 Choose a shape
               </option>
-              <option value="square">Square</option>
-              <option value="rectangle">Rectangle</option>
-              <option value="circle">Circle</option>
-              <option value="triangle">Triangle</option>
+              {availableShapes.map((shape) => (
+                <option value={shape}>{shape.charAt(0).toUpperCase() + shape.slice(1)}</option>
+              ))}
             </select>
           </label>
           <ItemSVG color={selectedColor} shape={selectedShape} /> {/*TODO: Align image with dropdowns*/}

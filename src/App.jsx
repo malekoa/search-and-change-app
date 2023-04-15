@@ -97,7 +97,7 @@ function App() {
 
   function submit() {
     if (ph.checkRule(rule, [...baseItemList], [...itemList])) {
-      toast.success("Correct!", {
+      toast.success("Correct! Final time: " + formatTime(seconds), {
         position: "top-center",
         autoClose: 1000,
         hideProgressBar: true,

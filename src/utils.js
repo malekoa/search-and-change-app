@@ -1,3 +1,6 @@
+export const availableColors = ["red", "blue", "green", "orange", "yellow"];
+export const availableShapes = ["square", "triangle", "rectangle", "circle"];
+
 export function containsDefault(arr) {
   return (
     arr.some((e) => e.color == "default") ||
@@ -7,13 +10,11 @@ export function containsDefault(arr) {
 
 export function generateRandomItems(count) {
   const items = [];
-  const colors = ["red", "blue", "green", "orange"];
-  const shapes = ["square", "triangle", "rectangle", "circle"];
 
   for (let i = 0; i < count; i++) {
     items.push({
-      color: colors[Math.floor(Math.random() * colors.length)],
-      shape: shapes[Math.floor(Math.random() * shapes.length)],
+      color: availableColors[Math.floor(Math.random() * availableColors.length)],
+      shape: availableShapes[Math.floor(Math.random() * availableShapes.length)],
     });
   }
   return items;
