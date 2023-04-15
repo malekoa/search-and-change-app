@@ -1,0 +1,23 @@
+.scrollbar{
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.actionscontainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.action {
+    margin-left: 10px;
+}
+
+.text {
+    margin-left: 20px;
+}
+
+.timer {
+    margin-left: 20px;
+}
