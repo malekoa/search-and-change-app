@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Scrollbar.module.css";
-import ItemSVG from "../ItemSVG";
+import ItemSVG from "../SVGs/ItemSVG";
 import ItemAdd from "./ItemAdd";
 
 function Scrollbar({ itemList, editable, onShowModal, onAddItem }) {

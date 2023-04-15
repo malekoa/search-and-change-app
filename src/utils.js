@@ -83,9 +83,9 @@ export function generateRandomRule(itemList) {
 }
 
 export function checkRule(rule, inputList , resultList) {
-  dirIsLeft = rule.dir === "left";
+  const dirIsLeft = rule.dir === "left";
 
-  
+
 
   return itemListEquals(inputList, resultList);
 }

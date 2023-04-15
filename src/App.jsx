@@ -1,12 +1,12 @@
 import { React , useState, useEffect } from "react";
 
 import RuleBox from "./components/RuleBox Components/RuleBox";
-import Modal from "./components/Modal";
+import Modal from "./components/Modal Components/Modal";
 import Scrollbar from "./components/Scrollbar Components/Scrollbar";
+import ItemEditForm from "./components/Modal Components/ItemEditForm";
 
 import styles from "./App.module.css";
 import * as ph from "./utils.js";
-import ItemEditForm from "./components/ItemEditForm";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -95,6 +95,7 @@ function App() {
   }
 
   function submit() {
+    console.log("submit")
     if (ph.checkRule(rule, baseItemList, itemList)) {
       toast.success("Correct!", {
         position: "top-center",

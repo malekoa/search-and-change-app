@@ -1,6 +1,6 @@
-import ItemSVG from "../ItemSVG";
+import ItemSVG from "../SVGs/ItemSVG";
 import styles from "./RuleBox.module.css";
-import ArrowSVG from "./ArrowSVG";
+import ArrowSVG from "../SVGs/ArrowSVG";
 
 function RuleBox({ rule }) {
   return (
