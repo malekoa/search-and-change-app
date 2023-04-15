@@ -81,3 +81,7 @@ export function generateRandomRule(itemList) {
     }
   }
 }
+
+export function checkRule(rule, inputList , resultList) {
+  return itemListEquals(inputList, resultList);
+}

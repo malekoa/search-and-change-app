@@ -7,18 +7,22 @@ import * as ph from "./utils.js";
 import RuleBox from "./components/RuleBox";
 import Modal from "./components/Scrollbar Components/Modal";
 import ItemEditForm from "./components/Scrollbar Components/ItemEditForm";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const length = 5;
 
 function App() {
-  const [baseItemList, setBaseItemList] = useState(ph.generateRandomItems(length));
+  const [baseItemList, setBaseItemList] = useState(
+    ph.generateRandomItems(length)
+  );
   const [itemList, setItemList] = useState(baseItemList);
   const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
   const [ModalData, setModalData] = useState({
     isVisible: false,
     color: "default",
     shape: "default",
-    index:  -1
+    index: -1,
   });
   function generateNewRule() {
     const newRule = ph.generateRandomRule(baseItemList);
@@ -30,7 +34,12 @@ function App() {
     setItemList(newDataset);
   }
   function hideModalHandler() {
-    setModalData({ isVisible: false, color: "default", shape: "default" , index:-1});
+    setModalData({
+      isVisible: false,
+      color: "default",
+      shape: "default",
+      index: -1,
+    });
   }
   function changeDataHandler(newData) {
     const newItemList = [...itemList];
@@ -50,12 +59,25 @@ function App() {
     setItemList(newItemList);
     hideModalHandler();
   }
-  function checkIfValid() {
-    if (ph.itemListEquals(baseItemList, itemList)) {
-      console.log("Success");
-    }
-    else{
-      console.log("Failure");
+  function submit() {
+    if (ph.checkRule(rule, baseItemList, itemList)) {
+      toast.success("Correct!", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+      });
+    } else {
+      toast.error("Wrong!", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+      });
     }
   }
 
@@ -82,7 +104,7 @@ function App() {
       </div>
 
       <div className={styles.text}>
-        <RuleBox rule={rule}/>
+        <RuleBox rule={rule} />
       </div>
 
       <div className={styles.scrollbar}>
@@ -95,26 +117,21 @@ function App() {
       </div>
 
       <div className={styles.actionscontainer}>
-        <button
-          className={styles.action}
-          onClick={generateNewDataset}
-        >
+        <button className={styles.action} onClick={generateNewDataset}>
           Generate new dataset
         </button>
-        <button
-          className={styles.action}
-          onClick={generateNewRule}
-        >
+        <button className={styles.action} onClick={generateNewRule}>
           Generate new rule
         </button>
         <button
           className={styles.action}
           disabled={ph.containsDefault(itemList)}
-          onClick={checkIfValid}
+          onClick={submit}
         >
           Submit
         </button>
       </div>
+      <ToastContainer/>
     </main>
   );
 }
