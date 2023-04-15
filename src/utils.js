@@ -34,7 +34,8 @@ export function generateRandomItems(count) {
 // }
 // export function itemListNotAllIdentical(itemList) {
 //   return !itemList.every(item=>itemEquals(item, itemList[0]))
-// }
+// } TODO Not working
+
 
 
 export function itemListEquals(itemList1, itemList2) {
@@ -82,10 +83,34 @@ export function generateRandomRule(itemList) {
   }
 }
 
-export function checkRule(rule, inputList , resultList) {
-  const dirIsLeft = rule.dir === "left";
+export function checkRule(rule, inputList , resultList , iterative = false) {
+  const initiator = rule.inr;
+  const terminator = rule.trm;
+  const output = rule.out;
+  if (rule.dir === "right") {
+    inputList = inputList.reverse();
+  }
 
-
-
-  return itemListEquals(inputList, resultList);
+  let newItemList = [];
+  let transform = false;
+  
+  for (const item of inputList) {
+    switch (item.color + item.shape) {
+      case initiator.color + initiator.shape:
+        if (transform) {
+          newItemList.push(output);
+        }
+        else{
+          newItemList.push(item);
+        }
+        break;
+      case terminator.color + terminator.shape:
+        transform = true;
+      default:
+        newItemList.push(item);
+    }
+  }
+  console.log(newItemList)
+  console.log(resultList)
+  return itemListEquals(newItemList, resultList);
 }
