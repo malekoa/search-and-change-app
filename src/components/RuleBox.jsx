@@ -3,7 +3,6 @@ import styles from "./RuleBox.module.css";
 import ArrowSVG from "./ArrowSVG";
 
 function RuleBox({ rule }) {
-  
   return (
     <>
       <div className={styles.infocontainer}>
