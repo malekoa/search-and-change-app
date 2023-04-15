@@ -20,7 +20,7 @@ function Scrollbar({ itemList, editable, onShowModal, onAddItem }) {
           {itemList.map((item, index) => (
             <button
               className={styles.itembutton}
-              onClick={(e) => onItemClicked(item, index)}
+              onClick={() => onItemClicked(item, index)}
               key={index}
               disabled={!editable}
             >

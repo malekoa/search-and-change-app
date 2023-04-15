@@ -1,6 +1,6 @@
 import styles from "./ItemEditForm.module.css";
 import { useState } from "react";
-import ItemSVG from "../ItemSVG";
+import ItemSVG from "./ItemSVG";
 
 function ItemEditForm({
   onCancel,
