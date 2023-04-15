@@ -51,18 +51,6 @@ function App() {
     });
   }
 
-  const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
-  function generateNewRule() {
-    const newRule = ph.generateRandomRule(baseItemList);
-    setRule(newRule);
-    resetTimer();
-  }
-  function generateNewDataset() {
-    const newDataset = ph.generateRandomItems(length);
-    setBaseItemList(newDataset);
-    setItemList(newDataset);
-    resetTimer();
-  }
 
   const [isPaused, setPaused] = useState(false);
   function pauseTimer() {
@@ -92,6 +80,19 @@ function App() {
       .padStart(2, "0");
     const remainingSeconds = (totalSeconds % 60).toString().padStart(2, "0");
     return `${minutes}:${remainingSeconds}`;
+  }
+
+  const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
+  function generateNewRule() {
+    const newRule = ph.generateRandomRule(baseItemList);
+    setRule(newRule);
+    resetTimer();
+  }
+  function generateNewDataset() {
+    const newDataset = ph.generateRandomItems(length);
+    setBaseItemList(newDataset);
+    setItemList(newDataset);
+    resetTimer();
   }
 
   function submit() {
