@@ -1,8 +1,7 @@
 import React from "react";
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import Scrollbar from "./components/Scrollbar Components/Scrollbar";
 import styles from "./App.module.css";
-import Timer from "./components/Timer";
 import * as ph from "./utils.js";
 import RuleBox from "./components/RuleBox";
 import Modal from "./components/Scrollbar Components/Modal";
@@ -10,36 +9,18 @@ import ItemEditForm from "./components/Scrollbar Components/ItemEditForm";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const length = 5;
+const length = 20;
 
 function App() {
   const [baseItemList, setBaseItemList] = useState(
     ph.generateRandomItems(length)
   );
   const [itemList, setItemList] = useState(baseItemList);
-  const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
-  const [ModalData, setModalData] = useState({
-    isVisible: false,
-    color: "default",
-    shape: "default",
-    index: -1,
-  });
-  function generateNewRule() {
-    const newRule = ph.generateRandomRule(baseItemList);
-    setRule(newRule);
-  }
-  function generateNewDataset() {
-    const newDataset = ph.generateRandomItems(length);
-    setBaseItemList(newDataset);
-    setItemList(newDataset);
-  }
-  function hideModalHandler() {
-    setModalData({
-      isVisible: false,
-      color: "default",
-      shape: "default",
-      index: -1,
-    });
+  function addItemHandler() {
+    const newItemList = [...itemList];
+    newItemList.push({ color: "default", shape: "default" });
+    setItemList(newItemList);
+    hideModalHandler();
   }
   function changeDataHandler(newData) {
     const newItemList = [...itemList];
@@ -53,12 +34,68 @@ function App() {
     setItemList(newItemList);
     hideModalHandler();
   }
-  function addItemHandler() {
-    const newItemList = [...itemList];
-    newItemList.push({ color: "default", shape: "default" });
-    setItemList(newItemList);
-    hideModalHandler();
+
+
+  const [ModalData, setModalData] = useState({
+    isVisible: false,
+    color: "default",
+    shape: "default",
+    index: -1,
+  });
+  function hideModalHandler() {
+    setModalData({
+      isVisible: false,
+      color: "default",
+      shape: "default",
+      index: -1,
+    });
   }
+
+
+  const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
+  function generateNewRule() {
+    const newRule = ph.generateRandomRule(baseItemList);
+    setRule(newRule);
+    resetTimer();
+  }
+  function generateNewDataset() {
+    const newDataset = ph.generateRandomItems(length);
+    setBaseItemList(newDataset);
+    setItemList(newDataset);
+    resetTimer();
+  }
+
+
+  const [isPaused, setPaused] = useState(false);
+  function pauseTimer() {
+    setPaused(true);
+  }
+  function resumeTimer() {
+    setPaused(false);
+  }
+
+
+  const [seconds, setSeconds] = useState(0);  
+  useEffect(() => {
+    let interval;
+    if (!isPaused) {
+      interval = setInterval(() => {
+        setSeconds(seconds => seconds + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isPaused]);
+  function resetTimer() {
+    setSeconds(0);
+    resumeTimer();
+  }
+  function formatTime(totalSeconds) {
+    const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    const remainingSeconds = (totalSeconds % 60).toString().padStart(2, '0');
+    return `${minutes}:${remainingSeconds}`;
+  }
+
+  
   function submit() {
     if (ph.checkRule(rule, baseItemList, itemList)) {
       toast.success("Correct!", {
@@ -69,6 +106,7 @@ function App() {
         pauseOnHover: false,
         draggable: false,
       });
+      pauseTimer();
     } else {
       toast.error("Wrong!", {
         position: "top-center",
@@ -80,6 +118,7 @@ function App() {
       });
     }
   }
+
 
   return (
     <main>
@@ -96,7 +135,7 @@ function App() {
       )}
 
       <div className={styles.timer}>
-        <Timer />
+        {<p>Time Elapsed: {formatTime(seconds)}</p>}
       </div>
 
       <div className={styles.scrollbar}>
@@ -123,6 +162,11 @@ function App() {
         <button className={styles.action} onClick={generateNewRule}>
           Generate new rule
         </button>
+        {!isPaused ? (
+        <button className={styles.action} onClick={pauseTimer}>Pause</button>
+      ) : (
+        <button className={styles.action} onClick={resumeTimer}>Resume</button>
+      )}
         <button
           className={styles.action}
           disabled={ph.containsDefault(itemList)}
