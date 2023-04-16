@@ -1,4 +1,4 @@
-import styles from "./ItemEditForm.css";
+import styles from "./ItemEditForm.module.css";
 import { useState } from "react";
 import ItemSVG from "../SVGs/ItemSVG";
 import { availableColors , availableShapes } from "../../utils";
