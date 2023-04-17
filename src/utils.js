@@ -8,15 +8,28 @@ export function containsDefault(arr) {
   );
 }
 
-export function generateRandomItems(count) {
+export function generateRandomItems(count, allowPartialDescription = false) {
   const items = [];
 
   for (let i = 0; i < count; i++) {
     items.push({
-      color: availableColors[Math.floor(Math.random() * availableColors.length)],
-      shape: availableShapes[Math.floor(Math.random() * availableShapes.length)],
+      color: availableColors.concat(allowPartialDescription ? ["gray"] : [])[
+        Math.floor(
+          Math.random() *
+            (availableColors.length + (allowPartialDescription ? 1 : 0))
+        )
+      ],
+      shape: availableShapes.concat(
+        allowPartialDescription ? ["undefined"] : []
+      )[
+        Math.floor(
+          Math.random() * availableShapes.length +
+            (allowPartialDescription ? 1 : 0)
+        )
+      ],
     });
   }
+
   return items;
 } // TODO: Add a check to make sure that the generated items are not identical, optimize this function by mapping instead of looping
 
@@ -49,14 +62,29 @@ export function containsIdentcalItems(itemList) {
   return false;
 }
 
-export function generateRandomRule(itemList) {
+export function applyPartialDescription(item, allowPartialDescription) {
+  let newItem = { ...item };
+  if (allowPartialDescription) {
+    if (Math.random() < 0.2) {
+      newItem.color = "gray";
+    }
+    if (Math.random() < 0.2) {
+      newItem.shape = "undefined";
+    }
+    console.log(newItem)
+  }
+  return newItem;
+}
+
+export function generateRandomRule(itemList, allowPartialDescription = {inr: false, trm: false, out: false}) {
   while (true) {
+    // TODO: There is a chance that this will loop forever, fix this
     let rule = {
-      inr: itemList[Math.floor(Math.random() * itemList.length)],
-      trm: itemList[Math.floor(Math.random() * itemList.length)],
+      inr: applyPartialDescription(itemList[Math.floor(Math.random() * itemList.length)], allowPartialDescription.inr),
+      trm: applyPartialDescription(itemList[Math.floor(Math.random() * itemList.length)], allowPartialDescription.trm),
       dir: Math.random() < 0.5 ? "right" : "left",
       inp: "inr",
-      out: generateRandomItems(1)[0],
+      out: applyPartialDescription(generateRandomItems(1)[0], allowPartialDescription.out),
       cnd: "default",
     };
     if (!containsIdentcalItems([rule.inr, rule.trm, rule.out])) {
@@ -65,11 +93,15 @@ export function generateRandomRule(itemList) {
   }
 }
 
+export function hasPartialDescription(item) {
+  return item.color === "gray" || item.shape === "undefined";
+}
+
 export function applyRule(rule, itemList) {
   const initiator = rule.inr;
   const terminator = rule.trm;
   const output = rule.out;
-  let itemListCopy = [...itemList]
+  let itemListCopy = [...itemList];
   if (rule.dir === "right") {
     itemListCopy = itemListCopy.reverse();
   }
@@ -81,8 +113,7 @@ export function applyRule(rule, itemList) {
       case initiator.color + initiator.shape:
         if (transform) {
           newItemList.push(output);
-        }
-        else{
+        } else {
           newItemList.push(item);
         }
         break;
@@ -111,6 +142,6 @@ export function findDifferenceList(itemList1, itemList2) {
   return differenceList;
 }
 
-export function checkRule(rule, inputList , resultList , iterative = false) {
+export function checkRule(rule, inputList, resultList, iterative = false) {
   return itemListEquals(applyRule(rule, inputList), resultList);
 }

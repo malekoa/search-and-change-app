@@ -148,7 +148,7 @@ function App() {
 
   const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
   function generateNewRule() {
-    const newRule = ph.generateRandomRule(baseItemList);
+    const newRule = ph.generateRandomRule(baseItemList, {inr: true, trm: true, out: true});
     setRule(newRule);
     setItemList(baseItemList);
     resetTimer();
@@ -265,7 +265,7 @@ function App() {
                 itemList
               )}
             />{" "}
-            {/* Insert proper solution and highlights here */}
+            {/* TODO: Optimize this part by computing rule twice. Maybe add a new useState/useEffect for solution */}
           </div>
         </Modal>
       )}
