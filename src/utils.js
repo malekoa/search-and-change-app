@@ -130,6 +130,20 @@ export function itemIncludes(partialItem, nonPartialItem) {
       return itemEquals(partialItem, nonPartialItem);
   }
 }
+
+export function chooseOutput(output, currentItem) {
+  switch ([output.color === "gray", output.shape === "undefined"].join()) {
+    case "true,false":
+      return { color: currentItem.color, shape: output.shape };
+    case "false,true":
+      return { color: output.color, shape: currentItem.shape };
+    case "true,true":
+      return currentItem;
+    case "false,false":
+      return output;
+  }
+}
+
 export function applyRule(rule, itemList) {
   const initiator = rule.inr;
   const terminator = rule.trm;
@@ -146,44 +160,33 @@ export function applyRule(rule, itemList) {
   // 2. If the terminator is partial, then when checking for the terminator, we need to allow all attributes that match the partial description
   // 3. If the output is partial, then when pushing the output into the new item list, we need to refer back to the initiator
 
-  // TODO: Right now I'll just enumerate all possibilities and hardcode everything, but I'll try to make it more general later
-  console.log("hasPartialDescription(rule.out)", hasPartialDescription(rule.out)  );
-
-  switch (hasPartialDescription(rule.out)) {
-    case false:
-      console.log("case 1");
-      for (const item of itemListCopy) {
-        console.log(item);
-        if (itemIncludes(initiator, item)) {
-          if (transform) {
-            console.log("is initiator, transformed");
-            newItemList.push(output);
-          } else {
-            console.log("is initiator, not transformed");
-            newItemList.push(item);
-          }
-        } else if (itemIncludes(terminator, item)) {
-          console.log("is terminator");
-          transform = true;
-          newItemList.push(item);
-        } else {
-          console.log("is not a target");
-          newItemList.push(item);
-        }
+  for (const item of itemListCopy) {
+    let itemToPush = null;
+    console.log(item);
+    if (itemIncludes(initiator, item)) {
+      if (transform) {
+        console.log("is initiator, transformed");
+        itemToPush = chooseOutput(output, item);
+      } else {
+        console.log("is initiator, not transformed");
+        itemToPush = item;
       }
-      console.log(newItemList);
-      break;
-    // case [false, false, true]:
-    //   return _applyRuleXXX(rule, itemList);
-    // case [true, true, false]:
-    //   return _applyRuleXXX(rule, itemList);
-    // case [true, false, true]:
-    //   return _applyRuleXXX(rule, itemList);
-    // case [false, true, true]:
-    //   return _applyRuleXXX(rule, itemList);
-    // case [true, true, true]:
-    //   return _applyRuleXXX(rule, itemList);
+    } 
+    if (itemIncludes(terminator, item)) {
+      console.log("is terminator");
+      transform = true;
+      if (itemToPush === null) {
+        itemToPush = item;
+      }
+    } else {
+      console.log("is not a target");
+      if (itemToPush === null) {
+        itemToPush = item;
+      }
+    }
+    newItemList.push(itemToPush);
   }
+  console.log(newItemList);
 
   if (rule.dir === "right") {
     newItemList = newItemList.reverse();
