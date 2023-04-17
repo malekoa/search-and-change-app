@@ -84,18 +84,18 @@ export function generateRandomRule(itemList) {
   }
 }
 
-export function checkRule(rule, inputList , resultList , iterative = false) {
+export function applyRule(rule, itemList) {
   const initiator = rule.inr;
   const terminator = rule.trm;
   const output = rule.out;
+  let itemListCopy = [...itemList]
   if (rule.dir === "right") {
-    inputList = inputList.reverse();
+    itemListCopy = itemListCopy.reverse();
   }
 
   let newItemList = [];
   let transform = false;
-  
-  for (const item of inputList) {
+  for (const item of itemListCopy) {
     switch (item.color + item.shape) {
       case initiator.color + initiator.shape:
         if (transform) {
@@ -115,6 +115,21 @@ export function checkRule(rule, inputList , resultList , iterative = false) {
   if (rule.dir === "right") {
     newItemList = newItemList.reverse();
   }
+
+  return newItemList;
+}
+
+export function findDifferenceList(itemList1, itemList2) {
+  let differenceList = [];
+  for (let i = 0; i < itemList1.length; i++) {
+    if (!itemEquals(itemList1[i], itemList2[i])) {
+      differenceList.push(i);
+    }
+  }
   
-  return itemListEquals(newItemList, resultList);
+  return differenceList;
+}
+
+export function checkRule(rule, inputList , resultList , iterative = false) {
+  return itemListEquals(applyRule(rule, inputList), resultList);
 }

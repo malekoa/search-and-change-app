@@ -14,7 +14,7 @@ import MenuSVG from "./components/SVGs/MenuSVG";
 import styles from "./App.module.css";
 import * as ph from "./utils.js";
 
-let length = 20;
+let length = 5;
 
 function App() {
   const [baseItemList, setBaseItemList] = useState(
@@ -94,6 +94,7 @@ function App() {
   function applySettingsHandler() {
     length = settingsMenuData.length;
     hideSettingsModalHandler();
+    console.log("Settings applied. Length = " + length);
   }
 
   const [menuModalIsVisible, setMenuModalIsVisible] = useState(false);
@@ -244,12 +245,20 @@ function App() {
           </div>
         </Modal>
       )}
-      
+
       {solutionModalIsVisible && (
         <Modal onClose={hideSolutionModalHandler}>
           <div className={styles.solutionbox}>
             <h2>Solution</h2>
-            <Scrollbar itemList={[...baseItemList]} editable={false} highlight={[2,3]}/> {/* Insert proper solution and highlights here */}
+            <Scrollbar
+              itemList={ph.applyRule(rule, baseItemList)}
+              editable={false}
+              highlight={ph.findDifferenceList(
+                ph.applyRule(rule, baseItemList),
+                itemList
+              )}
+            />{" "}
+            {/* Insert proper solution and highlights here */}
           </div>
         </Modal>
       )}
