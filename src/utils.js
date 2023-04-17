@@ -83,11 +83,11 @@ export function getItemVariation(item) {
   return {
     color:
       item.color === "gray"
-        ? Math.floor(Math.random() * availableColors.length)
+        ? availableColors[Math.floor(Math.random() * availableColors.length)]
         : item.color,
     shape:
       item.shape === "undefined"
-        ? Math.floor(Math.random() * availableShapes.length)
+        ? availableShapes[Math.floor(Math.random() * availableShapes.length)]
         : item.shape,
   };
 }
