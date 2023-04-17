@@ -7,6 +7,10 @@ import Modal from "./components/Modal Components/Modal";
 import Scrollbar from "./components/Scrollbar Components/Scrollbar";
 import ItemEditForm from "./components/Modal Components/ItemEditForm";
 
+import InfoSVG from "./components/SVGs/InfoSVG";
+import SettingsSVG from "./components/SVGs/SettingsSVG";
+import MenuSVG from "./components/SVGs/MenuSVG";
+
 import styles from "./App.module.css";
 import * as ph from "./utils.js";
 
@@ -25,25 +29,25 @@ function App() {
   }
   function changeDataHandler(newData) {
     const newItemList = [...itemList];
-    newItemList[ModalData.index] = newData;
+    newItemList[EditModalData.index] = newData;
     setItemList(newItemList);
     hideModalHandler();
   }
   function deleteItemHandler() {
     const newItemList = [...itemList];
-    newItemList.splice(ModalData.index, 1);
+    newItemList.splice(EditModalData.index, 1);
     setItemList(newItemList);
     hideModalHandler();
   }
 
-  const [ModalData, setModalData] = useState({
+  const [EditModalData, setEditModalData] = useState({
     isVisible: false,
     color: "default",
     shape: "default",
     index: -1,
   });
   function hideModalHandler() {
-    setModalData({
+    setEditModalData({
       isVisible: false,
       color: "default",
       shape: "default",
@@ -86,6 +90,7 @@ function App() {
   function generateNewRule() {
     const newRule = ph.generateRandomRule(baseItemList);
     setRule(newRule);
+    setItemList(baseItemList)
     resetTimer();
   }
   function generateNewDataset() {
@@ -120,17 +125,29 @@ function App() {
 
   return (
     <main>
-      {ModalData.isVisible && (
+      {EditModalData.isVisible && (
         <Modal onClose={hideModalHandler}>
           <ItemEditForm
             onCancel={hideModalHandler}
             onEditItem={changeDataHandler}
             onDeleteItem={deleteItemHandler}
-            defaultColor={ModalData.color}
-            defaultShape={ModalData.shape}
+            defaultColor={EditModalData.color}
+            defaultShape={EditModalData.shape}
           />
         </Modal>
       )}
+      
+      <div className={styles.actionscontainer}>
+          <button className={styles.action}>
+              <InfoSVG/>
+          </button>
+          <button className={styles.action}>
+              <SettingsSVG/>
+          </button>
+          <button className={styles.action}>
+              <MenuSVG/>
+          </button>
+      </div>
 
       <div className={styles.timer}>
         {<p>Time Elapsed: {formatTime(seconds)}</p>}
@@ -148,7 +165,7 @@ function App() {
         <Scrollbar
           itemList={itemList}
           editable={true}
-          onShowModal={setModalData}
+          onShowModal={setEditModalData}
           onAddItem={addItemHandler}
         />
       </div>
