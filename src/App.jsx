@@ -1,4 +1,4 @@
-import { React , useState, useEffect } from "react";
+import { React, useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -25,28 +25,28 @@ function App() {
     const newItemList = [...itemList];
     newItemList.push({ color: "default", shape: "default" });
     setItemList(newItemList);
-    hideModalHandler();
+    hideEditModalHandler();
   }
   function changeDataHandler(newData) {
     const newItemList = [...itemList];
-    newItemList[EditModalData.index] = newData;
+    newItemList[editModalData.index] = newData;
     setItemList(newItemList);
-    hideModalHandler();
+    hideEditModalHandler();
   }
   function deleteItemHandler() {
     const newItemList = [...itemList];
-    newItemList.splice(EditModalData.index, 1);
+    newItemList.splice(editModalData.index, 1);
     setItemList(newItemList);
-    hideModalHandler();
+    hideEditModalHandler();
   }
 
-  const [EditModalData, setEditModalData] = useState({
+  const [editModalData, setEditModalData] = useState({
     isVisible: false,
     color: "default",
     shape: "default",
     index: -1,
   });
-  function hideModalHandler() {
+  function hideEditModalHandler() {
     setEditModalData({
       isVisible: false,
       color: "default",
@@ -55,6 +55,13 @@ function App() {
     });
   }
 
+  const [infoModalIsVisible, setInfoModalIsVisible] = useState(false);
+  function showInfoModalHandler() {
+    setInfoModalIsVisible(true);
+  }
+  function hideInfoModalHandler() {
+    setInfoModalIsVisible(false);
+  }
 
   const [isPaused, setPaused] = useState(false);
   function pauseTimer() {
@@ -90,7 +97,7 @@ function App() {
   function generateNewRule() {
     const newRule = ph.generateRandomRule(baseItemList);
     setRule(newRule);
-    setItemList(baseItemList)
+    setItemList(baseItemList);
     resetTimer();
   }
   function generateNewDataset() {
@@ -125,28 +132,45 @@ function App() {
 
   return (
     <main>
-      {EditModalData.isVisible && (
-        <Modal onClose={hideModalHandler}>
+      {editModalData.isVisible && (
+        <Modal onClose={hideEditModalHandler}>
           <ItemEditForm
-            onCancel={hideModalHandler}
+            onCancel={hideEditModalHandler}
             onEditItem={changeDataHandler}
             onDeleteItem={deleteItemHandler}
-            defaultColor={EditModalData.color}
-            defaultShape={EditModalData.shape}
+            defaultColor={editModalData.color}
+            defaultShape={editModalData.shape}
           />
         </Modal>
       )}
-      
+
+      {infoModalIsVisible && (
+        <Modal onClose={hideInfoModalHandler} className={styles.infomodal}>
+          <div className={styles.infobox}>
+            <h2>Info</h2>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Pellentesque porttitor massa nec vehicula finibus. Donec elementum
+              lectus leo, in sollicitudin neque luctus vitae. Sed sed dui odio.
+              Ut eget tincidunt arcu. Sed aliquam congue dui vel accumsan. In
+              hac habitasse platea dictumst. Praesent elementum arcu at justo
+              aliquam, id molestie arcu eleifend. Nulla libero leo, viverra ut
+              lacus vitae, lacinia interdum erat.
+            </p>
+          </div>
+        </Modal>
+      )}
+
       <div className={styles.actionscontainer}>
-          <button className={styles.action}>
-              <InfoSVG/>
-          </button>
-          <button className={styles.action}>
-              <SettingsSVG/>
-          </button>
-          <button className={styles.action}>
-              <MenuSVG/>
-          </button>
+        <button className={styles.action} onClick={showInfoModalHandler}>
+          <InfoSVG />
+        </button>
+        <button className={styles.action}>
+          <SettingsSVG />
+        </button>
+        <button className={styles.action}>
+          <MenuSVG />
+        </button>
       </div>
 
       <div className={styles.timer}>
