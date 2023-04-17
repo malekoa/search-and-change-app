@@ -148,7 +148,7 @@ function App() {
 
   const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
   function generateNewRule() {
-    const newRule = ph.generateRandomRule(baseItemList, {inr: true, trm: true, out: true});
+    const newRule = ph.generateRandomRule(baseItemList, {inr: true, trm: false, out: false}, ); // TODO: Add settings for this or something
     setRule(newRule);
     setItemList(baseItemList);
     resetTimer();
