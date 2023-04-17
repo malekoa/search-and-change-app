@@ -11,6 +11,8 @@ import InfoSVG from "./components/SVGs/InfoSVG";
 import SettingsSVG from "./components/SVGs/SettingsSVG";
 import MenuSVG from "./components/SVGs/MenuSVG";
 
+import ItemSVG from "./components/SVGs/ItemSVG";
+
 import styles from "./App.module.css";
 import * as ph from "./utils.js";
 
@@ -183,6 +185,7 @@ function App() {
 
   return (
     <main>
+      <ItemSVG color={'grey'} shape={'undefined'} />
       {editModalData.isVisible && (
         <Modal onClose={hideEditModalHandler}>
           <ItemEditForm

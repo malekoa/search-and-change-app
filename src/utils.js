@@ -18,26 +18,7 @@ export function generateRandomItems(count) {
     });
   }
   return items;
-}
-
-// export function generateRandomItems(count) {
-//   const colors = ["red", "blue", "green", "orange"];
-//   const shapes = ["square", "triangle", "rectangle", "circle"];
-//   while (true) {
-//     const items = Array.apply(null, Array(count)).map((x) => ({
-//       color: colors[Math.floor(Math.random() * colors.length)],
-//       shape: shapes[Math.floor(Math.random() * shapes.length)],
-//     }));
-//     if (itemListNotAllIdentical(items)) {
-//       return items;
-//     }
-//   }
-// }
-// export function itemListNotAllIdentical(itemList) {
-//   return !itemList.every(item=>itemEquals(item, itemList[0]))
-// } TODO Not working
-
-
+} // TODO: Add a check to make sure that the generated items are not identical, optimize this function by mapping instead of looping
 
 export function itemListEquals(itemList1, itemList2) {
   if (itemList1.length !== itemList2.length) {
@@ -126,7 +107,7 @@ export function findDifferenceList(itemList1, itemList2) {
       differenceList.push(i);
     }
   }
-  
+
   return differenceList;
 }
 
