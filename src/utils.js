@@ -62,7 +62,11 @@ export function containsIdentcalItems(itemList) {
   return false;
 }
 
-export function applyPartialDescription(item, allowPartialDescription, partialOdds=0.2) {
+export function applyPartialDescription(
+  item,
+  allowPartialDescription,
+  partialOdds = 0.2
+) {
   let newItem = { ...item };
   if (allowPartialDescription) {
     if (Math.random() < partialOdds) {
@@ -78,7 +82,7 @@ export function applyPartialDescription(item, allowPartialDescription, partialOd
 export function generateRandomRule(
   itemList,
   allowPartialDescription = { inr: false, trm: false, out: false },
-  partialOdds=0.2
+  partialOdds = 0.2
 ) {
   while (true) {
     // TODO: There is a small chance that this will loop forever, fix this
@@ -113,17 +117,18 @@ export function hasPartialDescription(item) {
 }
 
 export function itemIncludes(partialItem, nonPartialItem) {
-  switch ([partialItem === 'gray', partialItem === 'undefined']) {
-    case [true, false]:
+  switch (
+    [partialItem.color === "gray", partialItem.shape === "undefined"].join()
+  ) {
+    case "true,false":
       return partialItem.shape === nonPartialItem.shape;
-    case [false, true]:
+    case "false,true":
       return partialItem.color === nonPartialItem.color;
-    case [true, true]:
+    case "true,true":
       return true;
-    case [false, false]:
+    case "false,false":
       return itemEquals(partialItem, nonPartialItem);
   }
-  
 }
 export function applyRule(rule, itemList) {
   const initiator = rule.inr;
@@ -136,39 +141,28 @@ export function applyRule(rule, itemList) {
     itemListCopy = itemListCopy.reverse();
   }
 
-  // All cases of partial descriptions can be viewed thus: 
+  // All cases of partial descriptions can be viewed thus:
   // 1. If the initiator is partial, then when checking for the initiator, we need to allow all attributes that match the partial description
   // 2. If the terminator is partial, then when checking for the terminator, we need to allow all attributes that match the partial description
   // 3. If the output is partial, then when pushing the output into the new item list, we need to refer back to the initiator
 
   // TODO: Right now I'll just enumerate all possibilities and hardcode everything, but I'll try to make it more general later
-  console.log(
-    [
-      hasPartialDescription(rule.inr),
-      hasPartialDescription(rule.trm),
-      hasPartialDescription(rule.out)
-    ].join())
+  console.log("hasPartialDescription(rule.out)", hasPartialDescription(rule.out)  );
 
-  switch (
-    [
-      hasPartialDescription(rule.inr),
-      hasPartialDescription(rule.trm),
-      hasPartialDescription(rule.out)
-    ].join()
-  ) {
-    case 'false,false,false':
+  switch (hasPartialDescription(rule.out)) {
+    case false:
       console.log("case 1");
       for (const item of itemListCopy) {
         console.log(item);
-        if (itemEquals(initiator, item)) {
+        if (itemIncludes(initiator, item)) {
           if (transform) {
             console.log("is initiator, transformed");
-            newItemList.push(output); 
+            newItemList.push(output);
           } else {
             console.log("is initiator, not transformed");
             newItemList.push(item);
           }
-        } else if (itemEquals(terminator, item)) {
+        } else if (itemIncludes(terminator, item)) {
           console.log("is terminator");
           transform = true;
           newItemList.push(item);
@@ -179,24 +173,6 @@ export function applyRule(rule, itemList) {
       }
       console.log(newItemList);
       break;
-    // case [true, false, false]:
-    //   for (const item of itemListCopy) {
-    //     if (itemIncludes(initiator, item)) {
-    //       if (transform) {
-    //         newItemList.push(output);
-    //       } else {
-    //         newItemList.push(item);
-    //       }
-    //     }
-    //     else if (itemIncludes(terminator, item)) {
-    //       transform = true;
-    //     }
-    //     else {
-    //       newItemList.push(item);
-    //     }
-    //   }
-    // case [false, true, false]:
-    //   return _applyRuleXXX(rule, itemList);
     // case [false, false, true]:
     //   return _applyRuleXXX(rule, itemList);
     // case [true, true, false]:
