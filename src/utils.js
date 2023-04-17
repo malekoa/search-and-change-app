@@ -111,6 +111,11 @@ export function checkRule(rule, inputList , resultList , iterative = false) {
         newItemList.push(item);
     }
   }
+
+  if (rule.dir === "right") {
+    newItemList = newItemList.reverse();
+  }
+  
   console.log(newItemList)
   console.log(resultList)
   return itemListEquals(newItemList, resultList);
