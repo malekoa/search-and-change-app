@@ -23,8 +23,8 @@ function RuleBox({ rule }) {
       <div className={styles.infocontainer}>
         <h3>Change: </h3>
         <div className={styles.infocontainer}>
-          INPUT:&nbsp;&nbsp;
-          {rule.inp}
+          INPUT:&nbsp;
+          {rule.inp.toUpperCase()}
         </div>
         <div className={styles.infocontainer}>
           OUTPUT:&nbsp;&nbsp;
