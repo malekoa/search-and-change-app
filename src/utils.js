@@ -147,6 +147,7 @@ export function chooseOutput(output, currentItem) {
 export function applyRule(rule, itemList) {
   const initiator = rule.inr;
   const terminator = rule.trm;
+  const input = rule.inp;
   const output = rule.out;
   let newItemList = [];
   let transform = false;
@@ -160,33 +161,29 @@ export function applyRule(rule, itemList) {
   // 2. If the terminator is partial, then when checking for the terminator, we need to allow all attributes that match the partial description
   // 3. If the output is partial, then when pushing the output into the new item list, we need to refer back to the initiator
 
-  for (const item of itemListCopy) {
-    let itemToPush = null;
-    console.log(item);
-    if (itemIncludes(initiator, item)) {
-      if (transform) {
-        console.log("is initiator, transformed");
-        itemToPush = chooseOutput(output, item);
+  if (input === "inr") { // TODO: Currently only supports initiator as input, no idea what to do with terminator as input
+    for (const item of itemListCopy) {
+      let itemToPush = null;
+      if (itemIncludes(initiator, item)) {
+        if (transform) {
+          itemToPush = chooseOutput(output, item);
+        } else {
+          itemToPush = item;
+        }
+      }
+      if (itemIncludes(terminator, item)) {
+        transform = true;
+        if (itemToPush === null) {
+          itemToPush = item;
+        }
       } else {
-        console.log("is initiator, not transformed");
-        itemToPush = item;
+        if (itemToPush === null) {
+          itemToPush = item;
+        }
       }
-    } 
-    if (itemIncludes(terminator, item)) {
-      console.log("is terminator");
-      transform = true;
-      if (itemToPush === null) {
-        itemToPush = item;
-      }
-    } else {
-      console.log("is not a target");
-      if (itemToPush === null) {
-        itemToPush = item;
-      }
+      newItemList.push(itemToPush);
     }
-    newItemList.push(itemToPush);
   }
-  console.log(newItemList);
 
   if (rule.dir === "right") {
     newItemList = newItemList.reverse();

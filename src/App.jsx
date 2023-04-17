@@ -16,7 +16,12 @@ import ItemSVG from "./components/SVGs/ItemSVG";
 import styles from "./App.module.css";
 import * as ph from "./utils.js";
 
+// Initial settings
+// TODO: Move these to a settings file
+// TODO: Program a range for applicable settings and include them in labels
 let length = 5;
+let allowPartial = { inr: false, trm: false, out: false };
+let partialOdds = 0.5;
 
 function App() {
   const [baseItemList, setBaseItemList] = useState(
@@ -78,25 +83,45 @@ function App() {
   // To add more settings, add the setting to the state, add a new case to the settingsChangeHandler,
   // add the setting to the applySettingsHandler and reset the data in hideSettingsModalHandler.
   const [settingsModalIsVisible, setSettingsModalIsVisible] = useState(false);
-  const [settingsMenuData, setSettingsMenuData] = useState({ length: length });
+  const [settingsMenuData, setSettingsMenuData] = useState({
+    length: length,
+    allowPartial: allowPartial,
+    partialOdds: partialOdds,
+  });
+  
   function showSettingsModalHandler() {
     setSettingsModalIsVisible(true);
   }
   function hideSettingsModalHandler() {
-    setSettingsMenuData({ length: length });
+    setSettingsMenuData({ length: length, allowPartial: allowPartial, partialOdds: partialOdds});
     setSettingsModalIsVisible(false);
   }
   function settingsChangeHandler(event) {
     const newSettingsData = { ...settingsMenuData };
-    if (event.target.id === "length") {
-      newSettingsData.length = event.target.value;
+    switch (event.target.id) {
+      case "length":
+        newSettingsData.length = event.target.value;
+        break;
+      case "partialINR":
+        newSettingsData.allowPartial.inr = event.target.checked;
+        break;
+      case "partialTRM":
+        newSettingsData.allowPartial.trm = event.target.checked;
+        break;
+      case "partialOUT":
+        newSettingsData.allowPartial.out = event.target.checked;
+        break;
+      case "partialOdds":
+        newSettingsData.partialOdds = event.target.value;
+        break;
     }
     setSettingsMenuData(newSettingsData);
   }
   function applySettingsHandler() {
     length = settingsMenuData.length;
+    allowPartial = settingsMenuData.allowPartial;
+    partialOdds = settingsMenuData.partialOdds;
     hideSettingsModalHandler();
-    console.log("Settings applied. Length = " + length);
   }
 
   const [menuModalIsVisible, setMenuModalIsVisible] = useState(false);
@@ -148,9 +173,13 @@ function App() {
 
   const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
   function generateNewRule() {
-    const newRule = ph.generateRandomRule(baseItemList, {inr: true, trm: true, out: true}, 0.5); // TODO: Add settings for this or something
+    const newRule = ph.generateRandomRule(
+      [...baseItemList],
+      allowPartial,
+      partialOdds
+    );
     setRule(newRule);
-    setItemList(baseItemList);
+    setItemList([...baseItemList]);
     resetTimer();
   }
   function generateNewDataset() {
@@ -185,7 +214,6 @@ function App() {
 
   return (
     <main>
-      <ItemSVG color={'grey'} shape={'undefined'} />
       {editModalData.isVisible && (
         <Modal onClose={hideEditModalHandler}>
           <ItemEditForm
@@ -234,6 +262,22 @@ function App() {
                   defaultValue={length}
                   onChange={settingsChangeHandler}
                 />
+              </div>
+              <div>
+                <label htmlFor="allowPartialINR">Allow partial INR: &nbsp;</label>
+                <input type="checkbox" id="partialINR" onChange={settingsChangeHandler} defaultChecked={allowPartial.inr}/>
+              </div>
+              <div>
+                <label htmlFor="allowPartialTRM">Allow partial TRM: &nbsp;</label>
+                <input type="checkbox" id="partialTRM" onChange={settingsChangeHandler} defaultChecked={allowPartial.trm}/>
+              </div>
+              <div>
+                <label htmlFor="allowPartialOUT">Allow partial OUT: &nbsp;</label>
+                <input type="checkbox" id="partialOUT" onChange={settingsChangeHandler} defaultChecked={allowPartial.out}/>
+              </div>
+              <div>
+                <label htmlFor="partialOdds">Partial odds: &nbsp;</label>
+                <input type="number" id="partialOdds" min="0" max="1" step="0.1" defaultValue={partialOdds} onChange={settingsChangeHandler}/>
               </div>
               <div className={styles.actionscontainer}>
                 <button onClick={applySettingsHandler}>Confirm</button>
