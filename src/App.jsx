@@ -109,6 +109,10 @@ function App() {
     showSolutionModalHandler();
     pauseTimer();
   }
+  function resetInputHandler() {
+    hideMenuModalHandler();
+    setItemList(baseItemList);
+  }
 
   const [solutionModalIsVisible, setSolutionModalIsVisible] = useState(false);
   function showSolutionModalHandler() {
@@ -241,7 +245,7 @@ function App() {
         <Modal onClose={hideMenuModalHandler}>
           <div>
             <button onClick={showSolutionHandler}>Show/Compare Solution</button>
-            <button>Reset</button>
+            <button onClick={resetInputHandler}>Reset Input</button>
           </div>
         </Modal>
       )}
