@@ -71,17 +71,21 @@ function App() {
     setPaused(false);
   }
 
+  // settingsMenuData is used to store the data in the settings modal until the user clicks "Apply"
+  // after which the data is copied to the actual settings. On hideSettingsModalHandler, the data is reset to the actual settings.
+  // To add more settings, add the setting to the state, add a new case to the settingsChangeHandler,
+  // add the setting to the applySettingsHandler and reset the data in hideSettingsModalHandler.
   const [settingsModalIsVisible, setSettingsModalIsVisible] = useState(false);
-  const [settingsMenuData, setSettingsMenuData] = useState({length: length});
+  const [settingsMenuData, setSettingsMenuData] = useState({ length: length });
   function showSettingsModalHandler() {
-    setSettingsMenuData({length: length});
     setSettingsModalIsVisible(true);
   }
   function hideSettingsModalHandler() {
+    setSettingsMenuData({ length: length });
     setSettingsModalIsVisible(false);
   }
   function settingsChangeHandler(event) {
-    const newSettingsData = {...settingsMenuData};
+    const newSettingsData = { ...settingsMenuData };
     if (event.target.id === "length") {
       newSettingsData.length = event.target.value;
     }
@@ -98,6 +102,19 @@ function App() {
   }
   function hideMenuModalHandler() {
     setMenuModalIsVisible(false);
+  }
+  function showSolutionHandler() {
+    hideMenuModalHandler();
+    showSolutionModalHandler();
+    pauseTimer();
+  }
+
+  const [solutionModalIsVisible, setSolutionModalIsVisible] = useState(false);
+  function showSolutionModalHandler() {
+    setSolutionModalIsVisible(true);
+  }
+  function hideSolutionModalHandler() {
+    setSolutionModalIsVisible(false);
   }
 
   const [seconds, setSeconds] = useState(0);
@@ -191,7 +208,10 @@ function App() {
       )}
 
       {settingsModalIsVisible && (
-        <Modal onClose={hideSettingsModalHandler} className={styles.settingsmodal}>
+        <Modal
+          onClose={hideSettingsModalHandler}
+          className={styles.settingsmodal}
+        >
           <div className={styles.settingsbox}>
             <h2>Settings</h2>
             <div>
@@ -215,7 +235,24 @@ function App() {
           </div>
         </Modal>
       )}
+
+      {menuModalIsVisible && (
+        <Modal onClose={hideMenuModalHandler}>
+          <div>
+            <button onClick={showSolutionHandler}>Show/Compare Solution</button>
+            <button>Reset</button>
+          </div>
+        </Modal>
+      )}
       
+      {solutionModalIsVisible && (
+        <Modal onClose={hideSolutionModalHandler}>
+          <div className={styles.solutionbox}>
+            <h2>Solution</h2>
+            <Scrollbar itemList={[...baseItemList]} editable={false} highlight={[2,3]}/> {/* Insert proper solution and highlights here */}
+          </div>
+        </Modal>
+      )}
 
       <div className={styles.actionscontainer}>
         <button className={styles.action} onClick={showInfoModalHandler}>

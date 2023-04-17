@@ -3,7 +3,13 @@ import styles from "./Scrollbar.module.css";
 import ItemSVG from "../SVGs/ItemSVG";
 import ItemAdd from "./ItemAdd";
 
-function Scrollbar({ itemList, editable, onShowModal, onAddItem }) {
+function Scrollbar({
+  itemList,
+  editable,
+  onShowModal,
+  onAddItem,
+  highlight = [],
+}) {
   function onItemClicked(item, index) {
     onShowModal({
       isVisible: true,
@@ -25,7 +31,15 @@ function Scrollbar({ itemList, editable, onShowModal, onAddItem }) {
               disabled={!editable}
             >
               <ItemSVG color={item.color} shape={item.shape} />
-              <p>{index + 1}</p>
+              <p
+                style={{
+                  backgroundColor: highlight.includes(index)
+                    ? "orange"
+                    : "transparent",
+                }}
+              > {/* TODO: Maybe eventually round borders */}
+                {index + 1}
+              </p>
             </button>
           ))}
           {editable && <ItemAdd onItemAdd={onAddItem} />}
