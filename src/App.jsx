@@ -252,7 +252,7 @@ function App() {
             <h2>Settings</h2>
             <div>
               <div>
-                <label htmlFor="length">Length: &nbsp;&nbsp;</label>
+                <label htmlFor="length">Length (5-30): &nbsp;&nbsp;</label> {/* TODO: Maybe eventually put range as option */}
                 <input
                   type="number"
                   id="length"
@@ -276,7 +276,7 @@ function App() {
                 <input type="checkbox" id="partialOUT" onChange={settingsChangeHandler} defaultChecked={allowPartial.out}/>
               </div>
               <div>
-                <label htmlFor="partialOdds">Partial odds: &nbsp;</label>
+                <label htmlFor="partialOdds">Partial odds (0.0-1.0): &nbsp;</label>
                 <input type="number" id="partialOdds" min="0" max="1" step="0.1" defaultValue={partialOdds} onChange={settingsChangeHandler}/>
               </div>
               <div className={styles.actionscontainer}>
