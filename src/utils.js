@@ -79,6 +79,23 @@ export function applyPartialDescription(
   return newItem;
 }
 
+export function getItemVariation(item) {
+  return {
+    color:
+      item.color === "gray"
+        ? Math.floor(Math.random() * availableColors.length)
+        : item.color,
+    shape:
+      item.shape === "undefined"
+        ? Math.floor(Math.random() * availableShapes.length)
+        : item.shape,
+  };
+}
+
+export function hasPartialDescription(item) {
+  return item.color === "gray" || item.shape === "undefined";
+}
+
 export function generateRandomRule(
   itemList,
   allowPartialDescription = { inr: false, trm: false, out: false },
@@ -104,17 +121,16 @@ export function generateRandomRule(
         allowPartialDescription.out,
         partialOdds
       ),
-      cnd: "default",
+      // TODO: For now, the condition will only be possible if the terminator is partial. There's a lot of expansion possibilities here
+      cnd: null
     };
+    rule.cnd = { target: "trm", value: getItemVariation(rule.trm) , display: hasPartialDescription(rule.trm)}
     if (!containsIdentcalItems([rule.inr, rule.trm, rule.out])) {
       return rule;
     }
   }
 }
 
-export function hasPartialDescription(item) {
-  return item.color === "gray" || item.shape === "undefined";
-}
 
 export function itemIncludes(partialItem, nonPartialItem) {
   switch (
@@ -161,7 +177,8 @@ export function applyRule(rule, itemList) {
   // 2. If the terminator is partial, then when checking for the terminator, we need to allow all attributes that match the partial description
   // 3. If the output is partial, then when pushing the output into the new item list, we need to refer back to the initiator
 
-  if (input === "inr") { // TODO: Currently only supports initiator as input, no idea what to do with terminator as input
+  if (input === "inr") {
+    // TODO: Currently only supports initiator as input, no idea what to do with terminator as input
     for (const item of itemListCopy) {
       let itemToPush = null;
       if (itemIncludes(initiator, item)) {
