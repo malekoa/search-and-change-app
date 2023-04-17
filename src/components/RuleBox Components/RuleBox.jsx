@@ -8,26 +8,26 @@ function RuleBox({ rule }) {
       <div className={styles.infocontainer}>
         <h3>Search: </h3>
         <div className={styles.infocontainer}>
-          INR:
+          INR:&nbsp;&nbsp;
           <ItemSVG color={rule.inr.color} shape={rule.inr.shape} />
         </div>
         <div className={styles.infocontainer}>
-          TRM:
+          TRM:&nbsp;&nbsp;
           <ItemSVG color={rule.trm.color} shape={rule.trm.shape} />
         </div>
         <div className={styles.infocontainer}>
-          DIR:
+          DIR:&nbsp;&nbsp;
           <ArrowSVG direction={rule.dir} />
         </div>
       </div>
       <div className={styles.infocontainer}>
         <h3>Change: </h3>
         <div className={styles.infocontainer}>
-          INPUT:
+          INPUT:&nbsp;&nbsp;
           {rule.inp}
         </div>
         <div className={styles.infocontainer}>
-          OUTPUT:
+          OUTPUT:&nbsp;&nbsp;
           <ItemSVG color={rule.out.color} shape={rule.out.shape} />
         </div>
         {/* <div className={styles.infocontainer}>CND: {dir}</div> */}

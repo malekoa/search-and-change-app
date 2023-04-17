@@ -116,7 +116,5 @@ export function checkRule(rule, inputList , resultList , iterative = false) {
     newItemList = newItemList.reverse();
   }
   
-  console.log(newItemList)
-  console.log(resultList)
   return itemListEquals(newItemList, resultList);
 }

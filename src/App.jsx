@@ -14,7 +14,7 @@ import MenuSVG from "./components/SVGs/MenuSVG";
 import styles from "./App.module.css";
 import * as ph from "./utils.js";
 
-const length = 20;
+let length = 20;
 
 function App() {
   const [baseItemList, setBaseItemList] = useState(
@@ -69,6 +69,35 @@ function App() {
   }
   function resumeTimer() {
     setPaused(false);
+  }
+
+  const [settingsModalIsVisible, setSettingsModalIsVisible] = useState(false);
+  const [settingsMenuData, setSettingsMenuData] = useState({length: length});
+  function showSettingsModalHandler() {
+    setSettingsMenuData({length: length});
+    setSettingsModalIsVisible(true);
+  }
+  function hideSettingsModalHandler() {
+    setSettingsModalIsVisible(false);
+  }
+  function settingsChangeHandler(event) {
+    const newSettingsData = {...settingsMenuData};
+    if (event.target.id === "length") {
+      newSettingsData.length = event.target.value;
+    }
+    setSettingsMenuData(newSettingsData);
+  }
+  function applySettingsHandler() {
+    length = settingsMenuData.length;
+    hideSettingsModalHandler();
+  }
+
+  const [menuModalIsVisible, setMenuModalIsVisible] = useState(false);
+  function showMenuModalHandler() {
+    setMenuModalIsVisible(true);
+  }
+  function hideMenuModalHandler() {
+    setMenuModalIsVisible(false);
   }
 
   const [seconds, setSeconds] = useState(0);
@@ -145,7 +174,7 @@ function App() {
       )}
 
       {infoModalIsVisible && (
-        <Modal onClose={hideInfoModalHandler} className={styles.infomodal}>
+        <Modal onClose={hideInfoModalHandler}>
           <div className={styles.infobox}>
             <h2>Info</h2>
             <p>
@@ -161,14 +190,41 @@ function App() {
         </Modal>
       )}
 
+      {settingsModalIsVisible && (
+        <Modal onClose={hideSettingsModalHandler} className={styles.settingsmodal}>
+          <div className={styles.settingsbox}>
+            <h2>Settings</h2>
+            <div>
+              <div>
+                <label htmlFor="length">Length: &nbsp;&nbsp;</label>
+                <input
+                  type="number"
+                  id="length"
+                  name="length"
+                  min="5"
+                  max="30"
+                  defaultValue={length}
+                  onChange={settingsChangeHandler}
+                />
+              </div>
+              <div className={styles.actionscontainer}>
+                <button onClick={applySettingsHandler}>Confirm</button>
+                <button onClick={hideSettingsModalHandler}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      )}
+      
+
       <div className={styles.actionscontainer}>
         <button className={styles.action} onClick={showInfoModalHandler}>
           <InfoSVG />
         </button>
-        <button className={styles.action}>
+        <button className={styles.action} onClick={showSettingsModalHandler}>
           <SettingsSVG />
         </button>
-        <button className={styles.action}>
+        <button className={styles.action} onClick={showMenuModalHandler}>
           <MenuSVG />
         </button>
       </div>

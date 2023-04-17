@@ -8,6 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 3%;
 }
 
 .action {
@@ -23,6 +24,13 @@
 }
 
 .infobox {
+    width: 50%;
+    text-align: center;
+    padding: 1rem;
+    width: 20rem;
+}
+
+.settingsbox {
     width: 50%;
     text-align: center;
     padding: 1rem;
