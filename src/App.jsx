@@ -6,6 +6,7 @@ import RuleBox from "./components/RuleBox Components/RuleBox";
 import Modal from "./components/Modal Components/Modal";
 import Scrollbar from "./components/Scrollbar Components/Scrollbar";
 import ItemEditForm from "./components/Modal Components/ItemEditForm";
+// import * as info from "./components/Modal Components/InfoBox.jsx";
 import InfoBox from "./components/Modal Components/InfoBox";
 
 import InfoSVG from "./components/SVGs/InfoSVG";
