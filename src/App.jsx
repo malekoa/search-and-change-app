@@ -355,6 +355,7 @@ function App() {
             <button onClick={showSolutionHandler}>Show/Compare Solution</button>
             <button onClick={resetInputHandler}>Reset Input</button>
             <button onClick={useInputAsDataset}>Use input as dataset</button>
+            <button disabled>Edit rule (in progress)</button>
           </div>
         </Modal>
       )}
