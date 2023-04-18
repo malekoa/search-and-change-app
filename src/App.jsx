@@ -22,6 +22,7 @@ import * as ph from "./utils.js";
 let length = 5;
 let allowPartial = { inr: false, trm: false, out: false };
 let partialOdds = 0.5;
+let allowCondition = false;
 
 function App() {
   const [baseItemList, setBaseItemList] = useState(
@@ -87,13 +88,14 @@ function App() {
     length: length,
     allowPartial: allowPartial,
     partialOdds: partialOdds,
+    allowCondition: allowCondition,
   });
   
   function showSettingsModalHandler() {
     setSettingsModalIsVisible(true);
   }
   function hideSettingsModalHandler() {
-    setSettingsMenuData({ length: length, allowPartial: allowPartial, partialOdds: partialOdds});
+    setSettingsMenuData({ length: length, allowPartial: allowPartial, partialOdds: partialOdds, allowCondition: allowCondition});
     setSettingsModalIsVisible(false);
   }
   function settingsChangeHandler(event) {
@@ -114,6 +116,9 @@ function App() {
       case "partialOdds":
         newSettingsData.partialOdds = event.target.value;
         break;
+      case "allowCondition":
+        newSettingsData.allowCondition = event.target.checked;
+        break;
     }
     setSettingsMenuData(newSettingsData);
   }
@@ -121,6 +126,7 @@ function App() {
     length = settingsMenuData.length;
     allowPartial = settingsMenuData.allowPartial;
     partialOdds = settingsMenuData.partialOdds;
+    allowCondition = settingsMenuData.allowCondition;
     hideSettingsModalHandler();
   }
 
@@ -176,7 +182,8 @@ function App() {
     const newRule = ph.generateRandomRule(
       [...baseItemList],
       allowPartial,
-      partialOdds
+      partialOdds,
+      allowCondition
     );
     setRule(newRule);
     setItemList([...baseItemList]);
@@ -214,6 +221,7 @@ function App() {
 
   return (
     <main>
+      {/* TODO: Put modal contents as separate components */}
       {editModalData.isVisible && (
         <Modal onClose={hideEditModalHandler}>
           <ItemEditForm
@@ -278,6 +286,10 @@ function App() {
               <div>
                 <label htmlFor="partialOdds">Partial odds (0.0-1.0): &nbsp;</label>
                 <input type="number" id="partialOdds" min="0" max="1" step="0.1" defaultValue={partialOdds} onChange={settingsChangeHandler}/>
+              </div>
+              <div>
+                <label htmlFor="allowCondition">Allow condition on change: &nbsp;</label>
+                <input type="checkbox" id="allowCondition" onChange={settingsChangeHandler} defaultChecked={allowCondition}/>
               </div>
               <div className={styles.actionscontainer}>
                 <button onClick={applySettingsHandler}>Confirm</button>

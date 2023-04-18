@@ -99,7 +99,8 @@ export function hasPartialDescription(item) {
 export function generateRandomRule(
   itemList,
   allowPartialDescription = { inr: false, trm: false, out: false },
-  partialOdds = 0.2
+  partialOdds = 0.2,
+  allowCondition = true
 ) {
   while (true) {
     // TODO: There is a small chance that this will loop forever, fix this
@@ -124,8 +125,9 @@ export function generateRandomRule(
       // TODO: For now, the condition will only be possible if the terminator is partial. There's a lot of expansion possibilities here
       cnd: null
     };
-    rule.cnd = { target: "trm", value: getItemVariation(rule.trm) , display: hasPartialDescription(rule.trm)}
-    if (!containsIdentcalItems([rule.inr, rule.trm, rule.out])) {
+    rule.cnd = { target: "trm", value: getItemVariation(rule.trm) , exists: hasPartialDescription(rule.trm) && allowCondition ? Math.random() < 0.5 : false};
+    
+    if (!containsIdentcalItems([rule.inr, rule.trm, rule.out])) { // TODO: Currently does not allow identical INR, TRM and OUT without iterative application
       return rule;
     }
   }
@@ -165,6 +167,8 @@ export function applyRule(rule, itemList) {
   const terminator = rule.trm;
   const input = rule.inp;
   const output = rule.out;
+  const condition = rule.cnd;
+
   let newItemList = [];
   let transform = false;
   let itemListCopy = [...itemList];

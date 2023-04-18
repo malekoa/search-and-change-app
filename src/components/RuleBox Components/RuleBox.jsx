@@ -30,7 +30,7 @@ function RuleBox({ rule }) {
           OUTPUT:&nbsp;&nbsp;
           <ItemSVG color={rule.out.color} shape={rule.out.shape} />
         </div>
-        {rule.cnd.display && (
+        {rule.cnd.exists && (
           <div className={styles.outline}>
             <div className={styles.infocontainer}>
               CND: {rule.cnd.target.toUpperCase()}:
