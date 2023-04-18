@@ -217,7 +217,7 @@ function App() {
     setItemList(newDataset);
     resetTimer();
   }
-
+  
   function useInputAsDataset() {
     hideMenuModalHandler();
     if (5 <= itemList.length <= 30) {
@@ -447,7 +447,7 @@ function App() {
           Generate new dataset
         </button>
         <button className={styles.action} onClick={generateNewRule}>
-          Generate new rule
+          Refresh all rules
         </button>
         {!isPaused ? (
           <button className={styles.action} onClick={pauseTimer}>
