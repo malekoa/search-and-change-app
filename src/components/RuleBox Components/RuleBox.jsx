@@ -3,7 +3,7 @@ import styles from "./RuleBox.module.css";
 import ArrowSVG from "../SVGs/ArrowSVG";
 import RefreshSVG from "../SVGs/RefreshSVG";
 
-function RuleBox({ rule, editable = false, onEditRule, onGetNewRule }) {
+function RuleBox({ rule, editable = false, onEditRule, index, onGetNewRule }) {
   const disabledButton = {
     border: "none",
     outline: "none",

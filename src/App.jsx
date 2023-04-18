@@ -47,7 +47,32 @@ function App() {
     setItemList(newItemList);
     hideEditModalHandler();
   }
+  function generateNewDataset() {
+    const newDataset = ph.generateRandomItems(length);
+    setBaseItemList(newDataset);
+    setItemList(newDataset);
+    resetTimer();
+  }
+  function useInputAsDataset() {
+    hideMenuModalHandler();
+    if (5 <= itemList.length <= 30) {
+      // TODO: Location where length range is used
+      setBaseItemList([...itemList]);
+      resetTimer();
+    } else {
+      toast.error("Dataset must be between 5 and 30 items", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+      });
+    }
+  }
 
+  // Due to previous code things the editModal's visibility is tied to editModalData.isVisible
+  // instead of a separate state variable.
   const [editModalData, setEditModalData] = useState({
     isVisible: false,
     color: "default",
@@ -128,7 +153,7 @@ function App() {
       case "numberOfRules":
         newSettingsData.numberOfRules = event.target.value;
         break;
-      }
+    }
     setSettingsMenuData(newSettingsData);
   }
   function applySettingsHandler() {
@@ -140,7 +165,10 @@ function App() {
       toast.error("Partial odds must be between 0 and 1.");
       return;
     }
-    if (1 > settingsMenuData.numberOfRules || settingsMenuData.numberOfRules > 5) {
+    if (
+      1 > settingsMenuData.numberOfRules ||
+      settingsMenuData.numberOfRules > 5
+    ) {
       toast.error("Number of rules must be between 1 and 10.");
       return;
     }
@@ -199,45 +227,33 @@ function App() {
     return `${minutes}:${remainingSeconds}`;
   }
 
-  const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
-  function generateNewRule() {
-    const newRule = ph.generateRandomRule(
-      [...baseItemList],
+  const [rules, setRules] = useState(
+    ph.generateRandomRuleset(
+      baseItemList,
       allowPartial,
       partialOdds,
-      allowCondition
-    );
-    setRule(newRule);
+      allowCondition,
+      numberOfRules
+    ),
+  );
+  function generateNewRule(index = false) {
+    const newRule = [...rules];
+    if (!index) {
+      for (let i = 0; i < numberOfRules; i++) {
+        newRule[i] = ph.generateRandomRule(baseItemList);
+      }
+    } else {
+      newRule[index] = ph.generateRandomRule(baseItemList);
+    }
+
+    setRules(newRule);
     setItemList([...baseItemList]);
     resetTimer();
   }
-  function generateNewDataset() {
-    const newDataset = ph.generateRandomItems(length);
-    setBaseItemList(newDataset);
-    setItemList(newDataset);
-    resetTimer();
-  }
-  
-  function useInputAsDataset() {
-    hideMenuModalHandler();
-    if (5 <= itemList.length <= 30) {
-      // TODO: Location where length range is used
-      setBaseItemList([...itemList]);
-      resetTimer();
-    } else {
-      toast.error("Dataset must be between 5 and 30 items", {
-        position: "top-center",
-        autoClose: 1000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-      });
-    }
-  }
 
+  // TODO: Pass the correct rule to ph.checkRule
   function submit() {
-    if (ph.checkRule(rule, [...baseItemList], [...itemList])) {
+    if (ph.checkRules(rules, [...baseItemList], [...itemList])) {
       toast.success("Correct! Final time: " + formatTime(seconds), {
         position: "top-center",
         autoClose: 1000,
@@ -258,7 +274,6 @@ function App() {
       });
     }
   }
-
   return (
     <main>
       {/* TODO: Put modal contents as separate components */}
@@ -392,15 +407,16 @@ function App() {
         </Modal>
       )}
 
+      {/* TODO: Pass the correct rule to ph.applyRule */}
       {solutionModalIsVisible && (
         <Modal onClose={hideSolutionModalHandler}>
           <div className={styles.solutionbox}>
             <h2>Solution</h2>
             <Scrollbar
-              itemList={ph.applyRule(rule, baseItemList)}
+              itemList={ph.applyRuleset(rules, baseItemList)}
               editable={false}
               highlight={ph.findDifferenceList(
-                ph.applyRule(rule, baseItemList),
+                ph.applyRuleset(rules, baseItemList),
                 itemList
               )}
             />{" "}
@@ -430,7 +446,14 @@ function App() {
       </div>
 
       <div className={styles.text}>
-        <RuleBox rule={rule} />
+        {rules.map((rule, index) => (
+          <RuleBox
+            key={"Rule " + index}
+            rule={rule}
+            index={index}
+            onGetNewRule={() => generateNewRule(index)}
+          />
+        ))}
       </div>
 
       <div className={styles.scrollbar}>
@@ -446,7 +469,7 @@ function App() {
         <button className={styles.action} onClick={generateNewDataset}>
           Generate new dataset
         </button>
-        <button className={styles.action} onClick={generateNewRule}>
+        <button className={styles.action} onClick={() => generateNewRule()}>
           Refresh all rules
         </button>
         {!isPaused ? (

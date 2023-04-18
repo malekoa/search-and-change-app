@@ -96,9 +96,10 @@ export function hasPartialDescription(item) {
   return item.color === "gray" || item.shape === "undefined";
 }
 
-export function pickDistinctItems(itemList, count) {
+export function pickRandomDistinctItems(itemList, count) {
   let items = [];
-  for (const item of itemList) {
+  let tempItemList = [...itemList].sort(() => Math.random() - 0.5);
+  for (const item of tempItemList) {
     if (!items.some((i) => itemEquals(i, item))) {
       items.push(item);
     }
@@ -139,13 +140,18 @@ export function generateRandomItem(cannotInclude = [], iterations = 0) {
   return item;
 }
 
+export function getRulesetOutputs(ruleset) {
+  return ruleset.map((r) => hasPartialDescription(r.out)? getItemVariation(r.out) : r.out);
+}
+
 export function generateRandomRule(
   itemList,
   allowPartialDescription = { inr: false, trm: false, out: false },
   partialOdds = 0.2,
-  allowCondition = true
+  allowCondition = true,
+  allowedExtraItems = []
 ) {
-  const ruleItems = pickDistinctItems(itemList, 2);
+  const ruleItems = pickRandomDistinctItems(itemList.concat(allowedExtraItems), 2);
   let rule;
 
   if (ruleItems) {
@@ -189,6 +195,27 @@ export function generateRandomRule(
   } else {
     return generateRandomRule(itemList, allowPartialDescription, partialOdds);
   }
+}
+
+export function generateRandomRuleset(
+  itemList,
+  allowPartialDescription = { inr: false, trm: false, out: false },
+  partialOdds = 0.2,
+  allowCondition = true,
+  count = 1
+) {
+  let ruleset = [];
+  for (let i = 0; i < count; i++) {
+    ruleset.push(
+      generateRandomRule(
+        itemList,
+        allowPartialDescription,
+        partialOdds,
+        allowCondition
+      )
+    );
+  }
+  return ruleset;
 }
 
 export function itemIncludes(partialItem, nonPartialItem) {
@@ -284,6 +311,14 @@ export function findDifferenceList(itemList1, itemList2) {
   return differenceList;
 }
 
-export function checkRule(rule, inputList, resultList, iterative = false) {
-  return itemListEquals(applyRule(rule, inputList), resultList);
+export function applyRuleset(ruleset, inputList) {
+  let currentList = [...inputList];
+  for (const rule of ruleset) {
+    currentList = applyRule(rule, currentList);
+  }
+  return currentList;
+}
+
+export function checkRules(rules, inputList, resultList, iterative = false) {
+  return itemListEquals(resultList, applyRuleset(rules, inputList));
 }
