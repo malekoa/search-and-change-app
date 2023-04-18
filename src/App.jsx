@@ -6,7 +6,6 @@ import RuleBox from "./components/RuleBox Components/RuleBox";
 import Modal from "./components/Modal Components/Modal";
 import Scrollbar from "./components/Scrollbar Components/Scrollbar";
 import ItemEditForm from "./components/Modal Components/ItemEditForm";
-// import * as info from "./components/Modal Components/InfoBox.jsx";
 import InfoBox from "./components/Modal Components/InfoBox";
 
 import InfoSVG from "./components/SVGs/InfoSVG";
@@ -181,20 +180,7 @@ function App() {
     return `${minutes}:${remainingSeconds}`;
   }
 
-
-
-
-
-
-
   const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
-  const [ruleModalIsVisible, setRuleModalIsVisible] = useState(false);
-  function showRuleModalHandler() {
-    setRuleModalIsVisible(true);
-  }
-  function hideRuleModalHandler() {
-    setRuleModalIsVisible(false);
-  }
   function generateNewRule() {
     const newRule = ph.generateRandomRule(
       [...baseItemList],
@@ -212,19 +198,6 @@ function App() {
     setItemList(newDataset);
     resetTimer();
   }
-  function changeRuleHandler() {
-    showRuleModalHandler();
-  }
-
-
-
-
-
-
-
-
-
-
 
   function useInputAsDataset() {
     hideMenuModalHandler();
@@ -382,7 +355,6 @@ function App() {
             <button onClick={showSolutionHandler}>Show/Compare Solution</button>
             <button onClick={resetInputHandler}>Reset Input</button>
             <button onClick={useInputAsDataset}>Use input as dataset</button>
-            <button onClick={changeRuleHandler}>Change Rule</button>
           </div>
         </Modal>
       )}

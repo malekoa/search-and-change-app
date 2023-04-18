@@ -18,6 +18,12 @@ function Scrollbar({
       index: index,
     });
   }
+  
+  const disabledButton = {
+    border: "none",
+    outline: "none",
+    background: "none",
+  };
 
   return (
     <>
@@ -28,6 +34,7 @@ function Scrollbar({
               className={styles.itembutton}
               onClick={() => onItemClicked(item, index)}
               key={index}
+              style={!editable ? disabledButton : {}}
               disabled={!editable}
             >
               <ItemSVG color={item.color} shape={item.shape} />
@@ -37,7 +44,9 @@ function Scrollbar({
                     ? "orange"
                     : "transparent",
                 }}
-              > {/* TODO: Maybe eventually round borders */}
+              >
+                {" "}
+                {/* TODO: Maybe eventually round borders */}
                 {index + 1}
               </p>
             </button>

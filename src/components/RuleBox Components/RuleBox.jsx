@@ -2,22 +2,33 @@ import ItemSVG from "../SVGs/ItemSVG";
 import styles from "./RuleBox.module.css";
 import ArrowSVG from "../SVGs/ArrowSVG";
 
-function RuleBox({ rule }) {
+function RuleBox({ rule, editable = false , onClick }) {
+  const disabledButton = {
+    border: "none",
+    outline: "none",
+    background: "none",
+  };
   return (
     <>
       <div className={styles.infocontainer}>
         <h3>Search: </h3>
         <div className={styles.infocontainer}>
-          INR:&nbsp;&nbsp;
-          <ItemSVG color={rule.inr.color} shape={rule.inr.shape} />
+          INR:&nbsp;
+          <button style={!editable ? disabledButton : {}} disabled={!editable} onClick={onClick}>
+            <ItemSVG color={rule.inr.color} shape={rule.inr.shape} />
+          </button>
         </div>
         <div className={styles.infocontainer}>
-          TRM:&nbsp;&nbsp;
-          <ItemSVG color={rule.trm.color} shape={rule.trm.shape} />
+          TRM:&nbsp;
+          <button style={!editable ? disabledButton : {}} disabled={!editable} onClick={onClick}>
+            <ItemSVG color={rule.trm.color} shape={rule.trm.shape} />
+          </button>
         </div>
         <div className={styles.infocontainer}>
-          DIR:&nbsp;&nbsp;
-          <ArrowSVG direction={rule.dir} />
+          DIR:&nbsp;
+          <button style={!editable ? disabledButton : {}} disabled={!editable} onClick={onClick}>
+            <ArrowSVG direction={rule.dir} />
+          </button>
         </div>
       </div>
       <div className={styles.infocontainer}>
@@ -27,17 +38,25 @@ function RuleBox({ rule }) {
           {rule.inp.toUpperCase()}
         </div>
         <div className={styles.infocontainer}>
-          OUTPUT:&nbsp;&nbsp;
-          <ItemSVG color={rule.out.color} shape={rule.out.shape} />
+          OUTPUT:&nbsp;
+          <button style={!editable ? disabledButton : {}} disabled={!editable} onClick={onClick}>
+            <ItemSVG color={rule.out.color} shape={rule.out.shape}/>
+          </button>
         </div>
         {rule.cnd.exists && (
           <div className={styles.outline}>
             <div className={styles.infocontainer}>
               CND: {rule.cnd.target.toUpperCase()}:
-              <ItemSVG
-                color={rule.cnd.value.color}
-                shape={rule.cnd.value.shape}
-              />
+              <button
+                style={!editable ? disabledButton : {}}
+                disabled={!editable}
+                onClick={onClick}
+              >
+                <ItemSVG
+                  color={rule.cnd.value.color}
+                  shape={rule.cnd.value.shape}
+                />
+              </button>
             </div>
           </div>
         )}
