@@ -6,12 +6,11 @@ import RuleBox from "./components/RuleBox Components/RuleBox";
 import Modal from "./components/Modal Components/Modal";
 import Scrollbar from "./components/Scrollbar Components/Scrollbar";
 import ItemEditForm from "./components/Modal Components/ItemEditForm";
+import InfoBox from "./components/Modal Components/InfoBox";
 
 import InfoSVG from "./components/SVGs/InfoSVG";
 import SettingsSVG from "./components/SVGs/SettingsSVG";
 import MenuSVG from "./components/SVGs/MenuSVG";
-
-import ItemSVG from "./components/SVGs/ItemSVG";
 
 import styles from "./App.module.css";
 import * as ph from "./utils.js";
@@ -225,7 +224,7 @@ function App() {
 
 
 
-  
+
   function useInputAsDataset() {
     hideMenuModalHandler();
     if (5 <= itemList.length <= 30) {
@@ -284,18 +283,7 @@ function App() {
 
       {infoModalIsVisible && (
         <Modal onClose={hideInfoModalHandler}>
-          <div className={styles.infobox}>
-            <h2>Info</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Pellentesque porttitor massa nec vehicula finibus. Donec elementum
-              lectus leo, in sollicitudin neque luctus vitae. Sed sed dui odio.
-              Ut eget tincidunt arcu. Sed aliquam congue dui vel accumsan. In
-              hac habitasse platea dictumst. Praesent elementum arcu at justo
-              aliquam, id molestie arcu eleifend. Nulla libero leo, viverra ut
-              lacus vitae, lacinia interdum erat.
-            </p>
-          </div>
+          <InfoBox />
         </Modal>
       )}
 
