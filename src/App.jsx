@@ -22,6 +22,7 @@ let length = 5;
 let allowPartial = { inr: false, trm: false, out: false };
 let partialOdds = 0.5;
 let allowCondition = false;
+let numberOfRules = 1;
 
 function App() {
   const [baseItemList, setBaseItemList] = useState(
@@ -88,8 +89,8 @@ function App() {
     allowPartial: allowPartial,
     partialOdds: partialOdds,
     allowCondition: allowCondition,
+    numberOfRules: numberOfRules,
   });
-
   function showSettingsModalHandler() {
     setSettingsModalIsVisible(true);
   }
@@ -99,6 +100,7 @@ function App() {
       allowPartial: allowPartial,
       partialOdds: partialOdds,
       allowCondition: allowCondition,
+      numberOfRules: numberOfRules,
     });
     setSettingsModalIsVisible(false);
   }
@@ -123,14 +125,31 @@ function App() {
       case "allowCondition":
         newSettingsData.allowCondition = event.target.checked;
         break;
-    }
+      case "numberOfRules":
+        newSettingsData.numberOfRules = event.target.value;
+        break;
+      }
     setSettingsMenuData(newSettingsData);
   }
   function applySettingsHandler() {
+    if (5 > settingsMenuData.length || settingsMenuData.length > 30) {
+      toast.error("Length must be between 5 and 30.");
+      return;
+    }
+    if (0 > settingsMenuData.partialOdds || settingsMenuData.partialOdds > 1) {
+      toast.error("Partial odds must be between 0 and 1.");
+      return;
+    }
+    if (1 > settingsMenuData.numberOfRules || settingsMenuData.numberOfRules > 5) {
+      toast.error("Number of rules must be between 1 and 10.");
+      return;
+    }
+
     length = settingsMenuData.length;
     allowPartial = settingsMenuData.allowPartial;
     partialOdds = settingsMenuData.partialOdds;
     allowCondition = settingsMenuData.allowCondition;
+    numberOfRules = settingsMenuData.numberOfRules;
     hideSettingsModalHandler();
   }
 
@@ -338,6 +357,19 @@ function App() {
                   id="allowCondition"
                   onChange={settingsChangeHandler}
                   defaultChecked={allowCondition}
+                />
+              </div>
+              <div>
+                <label htmlFor="numberOfRules">
+                  Number of rules (1-5): &nbsp;
+                </label>
+                <input
+                  type="number"
+                  id="numberOfRules"
+                  min="1"
+                  max="5"
+                  defaultValue={numberOfRules}
+                  onChange={settingsChangeHandler}
                 />
               </div>
               <div className={styles.actionscontainer}>
