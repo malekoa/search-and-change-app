@@ -237,21 +237,21 @@ function App() {
     ),
   );
   function generateNewRule(index = false) {
-    const newRule = [...rules];
-    if (!index) {
+    const newRules = [...rules];
+    
+    if (index===false) {
       for (let i = 0; i < numberOfRules; i++) {
-        newRule[i] = ph.generateRandomRule(baseItemList);
+        newRules[i] = ph.generateRandomRule(baseItemList.concat(ph.getRulesetOutputs(newRules.slice(0, i))));
       }
     } else {
-      newRule[index] = ph.generateRandomRule(baseItemList);
+      newRules[index] = ph.generateRandomRule(baseItemList.concat(ph.getRulesetOutputs(newRules.slice(0, index))));
     }
 
-    setRules(newRule);
+    setRules(newRules);
     setItemList([...baseItemList]);
     resetTimer();
   }
 
-  // TODO: Pass the correct rule to ph.checkRule
   function submit() {
     if (ph.checkRules(rules, [...baseItemList], [...itemList])) {
       toast.success("Correct! Final time: " + formatTime(seconds), {
@@ -274,6 +274,7 @@ function App() {
       });
     }
   }
+  
   return (
     <main>
       {/* TODO: Put modal contents as separate components */}
@@ -407,7 +408,6 @@ function App() {
         </Modal>
       )}
 
-      {/* TODO: Pass the correct rule to ph.applyRule */}
       {solutionModalIsVisible && (
         <Modal onClose={hideSolutionModalHandler}>
           <div className={styles.solutionbox}>
