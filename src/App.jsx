@@ -90,12 +90,17 @@ function App() {
     partialOdds: partialOdds,
     allowCondition: allowCondition,
   });
-  
+
   function showSettingsModalHandler() {
     setSettingsModalIsVisible(true);
   }
   function hideSettingsModalHandler() {
-    setSettingsMenuData({ length: length, allowPartial: allowPartial, partialOdds: partialOdds, allowCondition: allowCondition});
+    setSettingsMenuData({
+      length: length,
+      allowPartial: allowPartial,
+      partialOdds: partialOdds,
+      allowCondition: allowCondition,
+    });
     setSettingsModalIsVisible(false);
   }
   function settingsChangeHandler(event) {
@@ -138,7 +143,6 @@ function App() {
     setMenuModalIsVisible(false);
   }
   function showSolutionHandler() {
-    hideMenuModalHandler();
     showSolutionModalHandler();
     pauseTimer();
   }
@@ -177,7 +181,20 @@ function App() {
     return `${minutes}:${remainingSeconds}`;
   }
 
+
+
+
+
+
+
   const [rule, setRule] = useState(ph.generateRandomRule(baseItemList));
+  const [ruleModalIsVisible, setRuleModalIsVisible] = useState(false);
+  function showRuleModalHandler() {
+    setRuleModalIsVisible(true);
+  }
+  function hideRuleModalHandler() {
+    setRuleModalIsVisible(false);
+  }
   function generateNewRule() {
     const newRule = ph.generateRandomRule(
       [...baseItemList],
@@ -194,6 +211,37 @@ function App() {
     setBaseItemList(newDataset);
     setItemList(newDataset);
     resetTimer();
+  }
+  function changeRuleHandler() {
+    showRuleModalHandler();
+  }
+
+
+
+
+
+
+
+
+
+
+  
+  function useInputAsDataset() {
+    hideMenuModalHandler();
+    if (5 <= itemList.length <= 30) {
+      // TODO: Location where length range is used
+      setBaseItemList([...itemList]);
+      resetTimer();
+    } else {
+      toast.error("Dataset must be between 5 and 30 items", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+      });
+    }
   }
 
   function submit() {
@@ -260,7 +308,8 @@ function App() {
             <h2>Settings</h2>
             <div>
               <div>
-                <label htmlFor="length">Length (5-30): &nbsp;&nbsp;</label> {/* TODO: Maybe eventually put range as option */}
+                <label htmlFor="length">Length (5-30): &nbsp;&nbsp;</label>{" "}
+                {/* TODO: Maybe eventually put range as option */}
                 <input
                   type="number"
                   id="length"
@@ -272,24 +321,62 @@ function App() {
                 />
               </div>
               <div>
-                <label htmlFor="allowPartialINR">Allow partial INR: &nbsp;</label>
-                <input type="checkbox" id="partialINR" onChange={settingsChangeHandler} defaultChecked={allowPartial.inr}/>
+                <label htmlFor="allowPartialINR">
+                  Allow partial INR: &nbsp;
+                </label>
+                <input
+                  type="checkbox"
+                  id="partialINR"
+                  onChange={settingsChangeHandler}
+                  defaultChecked={allowPartial.inr}
+                />
               </div>
               <div>
-                <label htmlFor="allowPartialTRM">Allow partial TRM: &nbsp;</label>
-                <input type="checkbox" id="partialTRM" onChange={settingsChangeHandler} defaultChecked={allowPartial.trm}/>
+                <label htmlFor="allowPartialTRM">
+                  Allow partial TRM: &nbsp;
+                </label>
+                <input
+                  type="checkbox"
+                  id="partialTRM"
+                  onChange={settingsChangeHandler}
+                  defaultChecked={allowPartial.trm}
+                />
               </div>
               <div>
-                <label htmlFor="allowPartialOUT">Allow partial OUT: &nbsp;</label>
-                <input type="checkbox" id="partialOUT" onChange={settingsChangeHandler} defaultChecked={allowPartial.out}/>
+                <label htmlFor="allowPartialOUT">
+                  Allow partial OUT: &nbsp;
+                </label>
+                <input
+                  type="checkbox"
+                  id="partialOUT"
+                  onChange={settingsChangeHandler}
+                  defaultChecked={allowPartial.out}
+                />
               </div>
               <div>
-                <label htmlFor="partialOdds">Partial odds (0.0-1.0): &nbsp;</label>
-                <input type="number" id="partialOdds" min="0" max="1" step="0.1" defaultValue={partialOdds} onChange={settingsChangeHandler}/>
+                <label htmlFor="partialOdds">
+                  Partial odds (0.0-1.0): &nbsp;
+                </label>
+                <input
+                  type="number"
+                  id="partialOdds"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  defaultValue={partialOdds}
+                  onChange={settingsChangeHandler}
+                />
               </div>
               <div>
-                <label htmlFor="allowCondition">Allow condition on change: &nbsp;</label>
-                <input type="checkbox" id="allowCondition" onChange={settingsChangeHandler} defaultChecked={allowCondition}/>
+                <label htmlFor="allowCondition">
+                  Allow condition on change: &nbsp;
+                </label>
+                <input
+                  type="checkbox"
+                  id="allowCondition"
+                  onChange={settingsChangeHandler}
+                  defaultChecked={allowCondition}
+                />
               </div>
               <div className={styles.actionscontainer}>
                 <button onClick={applySettingsHandler}>Confirm</button>
@@ -305,6 +392,8 @@ function App() {
           <div>
             <button onClick={showSolutionHandler}>Show/Compare Solution</button>
             <button onClick={resetInputHandler}>Reset Input</button>
+            <button onClick={useInputAsDataset}>Use input as dataset</button>
+            <button onClick={changeRuleHandler}>Change Rule</button>
           </div>
         </Modal>
       )}
