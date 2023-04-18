@@ -96,43 +96,100 @@ export function hasPartialDescription(item) {
   return item.color === "gray" || item.shape === "undefined";
 }
 
+export function pickDistinctItems(itemList, count) {
+  let items = [];
+  for (const item of itemList) {
+    if (!items.some((i) => itemEquals(i, item))) {
+      items.push(item);
+    }
+    if (items.length == count) {
+      return items;
+    }
+  }
+  return false;
+}
+
+export function generateRandomItem(cannotInclude = [], iterations = 0) {
+  let item = generateRandomItems(1)[0];
+  if (iterations === 0) {
+    let unusedColors = availableColors.filter(
+      (c) => !cannotInclude.some((i) => i.color === c)
+    );
+    if (unusedColors.length !== 0) {
+      item.color =
+        unusedColors[Math.floor(Math.random() * unusedColors.length)];
+      return item;
+    }
+    let unusedShapes = availableShapes.filter(
+      (s) => !cannotInclude.some((i) => i.shape === s)
+    );
+    if (unusedShapes.length !== 0) {
+      item.shape =
+        unusedShapes[Math.floor(Math.random() * unusedShapes.length)];
+      return item;
+    }
+  }
+  if (iterations >= 1000) {
+    console.log("Could not generate random item");
+    return false;
+  }
+  if (cannotInclude.some((i) => itemEquals(i, item))) {
+    return generateRandomItem(cannotInclude, iterations + 1);
+  }
+  return item;
+}
+
 export function generateRandomRule(
   itemList,
   allowPartialDescription = { inr: false, trm: false, out: false },
   partialOdds = 0.2,
   allowCondition = true
 ) {
-  while (true) {
-    // TODO: There is a small chance that this will loop forever, fix this
-    let rule = {
+  const ruleItems = pickDistinctItems(itemList, 2);
+  let rule;
+
+  if (ruleItems) {
+    rule = {
       inr: applyPartialDescription(
-        itemList[Math.floor(Math.random() * itemList.length)],
+        ruleItems[0],
         allowPartialDescription.inr,
         partialOdds
       ),
       trm: applyPartialDescription(
-        itemList[Math.floor(Math.random() * itemList.length)],
+        ruleItems[1],
         allowPartialDescription.trm,
         partialOdds
       ),
       dir: Math.random() < 0.5 ? "right" : "left",
       inp: "inr",
-      out: applyPartialDescription(
-        generateRandomItems(1)[0],
-        allowPartialDescription.out,
-        partialOdds
-      ),
-      // TODO: For now, the condition will only be possible if the terminator is partial. There's a lot of expansion possibilities here
-      cnd: null
+      out: null,
+      cnd: null,
     };
-    rule.cnd = { target: "trm", value: getItemVariation(rule.trm) , exists: hasPartialDescription(rule.trm) && allowCondition ? Math.random() < 0.5 : false};
-    
-    if (!containsIdentcalItems([rule.inr, rule.trm, rule.out])) { // TODO: Currently does not allow identical INR, TRM and OUT without iterative application
-      return rule;
-    }
+    rule.out = applyPartialDescription(
+      // TODO: For now, the condition will only be possible if the terminator is partial. There's a lot of expansion possibilities here
+      generateRandomItem([rule.inr, rule.trm]),
+      allowPartialDescription.out,
+      partialOdds
+    );
+    rule.cnd = {
+      target: "trm",
+      value: getItemVariation(rule.trm),
+      exists:
+        hasPartialDescription(rule.trm) && allowCondition
+          ? Math.random() < 0.5
+          : false,
+    };
+  } else {
+    console.log("Could not generate random rule");
+    return false;
+  }
+  if (!containsIdentcalItems([rule.inr, rule.trm, rule.out])) {
+    // TODO: Currently does not allow identical INR, TRM and OUT without iterative application
+    return rule;
+  } else {
+    return generateRandomRule(itemList, allowPartialDescription, partialOdds);
   }
 }
-
 
 export function itemIncludes(partialItem, nonPartialItem) {
   switch (
@@ -163,16 +220,19 @@ export function chooseOutput(output, currentItem) {
 }
 
 export function applyRule(rule, itemList) {
+  // TODO: Maybe destructure this idk
   const initiator = rule.inr;
   const terminator = rule.trm;
+  const direction = rule.dir;
   const input = rule.inp;
   const output = rule.out;
-  const condition = rule.cnd;
+  const condition =
+    rule.cnd.exists && rule.cnd.target === "trm" ? rule.cnd.value : null;
 
   let newItemList = [];
   let transform = false;
   let itemListCopy = [...itemList];
-  if (rule.dir === "right") {
+  if (direction === "right") {
     itemListCopy = itemListCopy.reverse();
   }
 
@@ -193,7 +253,7 @@ export function applyRule(rule, itemList) {
         }
       }
       if (itemIncludes(terminator, item)) {
-        transform = true;
+        transform = !condition || itemEquals(condition, item);
         if (itemToPush === null) {
           itemToPush = item;
         }
@@ -206,7 +266,7 @@ export function applyRule(rule, itemList) {
     }
   }
 
-  if (rule.dir === "right") {
+  if (direction === "right") {
     newItemList = newItemList.reverse();
   }
 
