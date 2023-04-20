@@ -24,7 +24,6 @@
 }
 
 .infobox {
-    width: 50%;
     text-align: center;
     padding: 1rem;
     width: 20rem;
@@ -42,4 +41,15 @@
     text-align: center;
     padding: 1rem;
     width: 20rem;
+}
+
+.menucontainer {
+    text-align: center;
+    padding: 1rem;
+    width: 15rem;
+    justify-content: center;
+}
+
+.menuaction {
+    margin: 5px;
 }

@@ -71,8 +71,8 @@ function App() {
     }
   }
 
-  // Due to previous code things the editModal's visibility is tied to editModalData.isVisible
-  // instead of a separate state variable.
+  // Due to previous code things the editModal's visibility is tied to 
+  // editModalData.isVisible instead of a separate state variable.
   const [editModalData, setEditModalData] = useState({
     isVisible: false,
     color: "default",
@@ -239,7 +239,6 @@ function App() {
     )
   );
   function generateNewRule(index = false) {
-    console.log(index);
     let newRules = [...rules];
 
     if (index !== false) {
@@ -287,6 +286,37 @@ function App() {
         draggable: false,
       });
     }
+  }
+
+  function setDemo1() {
+    const demo1Items = [
+      { id: "1", color: "red", shape: "circle" },
+      { id: "2", color: "red", shape: "square" },
+      { id: "3", color: "blue", shape: "circle" },
+      { id: "4", color: "blue", shape: "square" },
+      { id: "5", color: "green", shape: "circle" },
+      { id: "6", color: "green", shape: "square" },
+    ];
+    const demo1Rules = [
+      {
+        id: "1",
+        inr: { color: "red", shape: "circle" },
+        trm: { color: "red", shape: "square" },
+        dir: "left",
+        inp: "inr",
+        out: { color: "blue", shape: "square" },
+        cnd: {
+          target: "trm",
+          value: { color: "red", shape: "square" },
+          exists: false,
+        },
+      },
+    ];
+    setRules(demo1Rules);
+    setItemList([...demo1Items]);
+    setBaseItemList([...demo1Items]);
+    resetTimer();
+    hideMenuModalHandler();
   }
 
   return (
@@ -413,11 +443,23 @@ function App() {
 
       {menuModalIsVisible && (
         <Modal onClose={hideMenuModalHandler}>
-          <div>
-            <button onClick={showSolutionHandler}>Show/Compare Solution</button>
-            <button onClick={resetInputHandler}>Reset Input</button>
-            <button onClick={useInputAsDataset}>Use input as dataset</button>
-            <button disabled>Edit rule (in progress)</button>
+          <h2 className={styles.text}>Menu</h2>
+          <div className={styles.menucontainer}>
+            <button className={styles.menuaction} onClick={showSolutionHandler}>
+              Show/Compare Solution
+            </button>
+            <button className={styles.menuaction} onClick={resetInputHandler}>
+              Reset Input
+            </button>
+            <button className={styles.menuaction} onClick={useInputAsDataset}>
+              Use input as dataset
+            </button>
+            <button className={styles.menuaction} onClick={setDemo1}>
+              Demo 1
+            </button>
+            <button className={styles.menuaction} disabled>
+              Edit rule (in progress)
+            </button>
           </div>
         </Modal>
       )}
