@@ -239,27 +239,25 @@ function App() {
     )
   );
   function generateNewRule(index = false) {
-    const newRules = [...rules];
+    console.log(index);
+    let newRules = [...rules];
 
-    if (index === false) {
-      for (let i = 0; i < numberOfRules; i++) {
-        newRules[i] = ph.generateRandomRule(
-          baseItemList,
-          allowPartial,
-          partialOdds,
-          allowCondition,
-          ph.getRulesetOutputs(newRules.slice(0, i))
-        );
-      }
-    } else {
+    if (index !== false) {
       newRules[index] = ph.generateRandomRule(
-        newRules[i] = ph.generateRandomRule(
-          baseItemList,
-          allowPartial,
-          partialOdds,
-          allowCondition,
-          ph.getRulesetOutputs(newRules.slice(0, i))
-        )
+        baseItemList,
+        allowPartial,
+        partialOdds,
+        allowCondition,
+        ph.getRulesetOutputs(newRules.slice(0, index))
+      );
+    } else {
+      newRules = ph.generateRandomRuleset(
+        baseItemList,
+        allowPartial,
+        partialOdds,
+        allowCondition,
+        ph.getRulesetOutputs(newRules),
+        numberOfRules
       );
     }
 

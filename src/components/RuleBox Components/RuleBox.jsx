@@ -74,7 +74,7 @@ function RuleBox({ rule, editable = false, onEditRule, index, onGetNewRule }) {
               <button
                 style={!editable ? disabledButton : {}}
                 disabled={!editable}
-                onClick={onEditRule}
+                onClick={onGetNewRule}
               >
                 <ItemSVG
                   color={rule.cnd.value.color}

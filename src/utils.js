@@ -201,6 +201,7 @@ export function generateRandomRuleset(
   allowPartialDescription = { inr: false, trm: false, out: false },
   partialOdds = 0.2,
   allowCondition = true,
+  allowedExtraItems = [],
   count = 1
 ) {
   let ruleset = [];
@@ -210,7 +211,8 @@ export function generateRandomRuleset(
         itemList,
         allowPartialDescription,
         partialOdds,
-        allowCondition
+        allowCondition,
+        allowedExtraItems,
       )
     );
   }
