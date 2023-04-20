@@ -161,8 +161,11 @@ function App() {
       toast.error("Length must be between 5 and 30.");
       return;
     }
-    if (0 > settingsMenuData.partialOdds || settingsMenuData.partialOdds > 1) {
-      toast.error("Partial odds must be between 0 and 1.");
+    if (
+      0 > settingsMenuData.partialOdds ||
+      settingsMenuData.partialOdds > 0.9
+    ) {
+      toast.error("Partial odds must be between 0 and 0.9.");
       return;
     }
     if (
@@ -226,7 +229,6 @@ function App() {
     const remainingSeconds = (totalSeconds % 60).toString().padStart(2, "0");
     return `${minutes}:${remainingSeconds}`;
   }
-
   const [rules, setRules] = useState(
     ph.generateRandomRuleset(
       baseItemList,
@@ -234,17 +236,31 @@ function App() {
       partialOdds,
       allowCondition,
       numberOfRules
-    ),
+    )
   );
   function generateNewRule(index = false) {
     const newRules = [...rules];
-    
-    if (index===false) {
+
+    if (index === false) {
       for (let i = 0; i < numberOfRules; i++) {
-        newRules[i] = ph.generateRandomRule(baseItemList.concat(ph.getRulesetOutputs(newRules.slice(0, i))));
+        newRules[i] = ph.generateRandomRule(
+          baseItemList,
+          allowPartial,
+          partialOdds,
+          allowCondition,
+          ph.getRulesetOutputs(newRules.slice(0, i))
+        );
       }
     } else {
-      newRules[index] = ph.generateRandomRule(baseItemList.concat(ph.getRulesetOutputs(newRules.slice(0, index))));
+      newRules[index] = ph.generateRandomRule(
+        newRules[i] = ph.generateRandomRule(
+          baseItemList,
+          allowPartial,
+          partialOdds,
+          allowCondition,
+          ph.getRulesetOutputs(newRules.slice(0, i))
+        )
+      );
     }
 
     setRules(newRules);
@@ -274,7 +290,7 @@ function App() {
       });
     }
   }
-  
+
   return (
     <main>
       {/* TODO: Put modal contents as separate components */}
@@ -352,13 +368,13 @@ function App() {
               </div>
               <div>
                 <label htmlFor="partialOdds">
-                  Partial odds (0.0-1.0): &nbsp;
+                  Partial odds (0.0-0.9): &nbsp;
                 </label>
                 <input
                   type="number"
                   id="partialOdds"
                   min="0"
-                  max="1"
+                  max="0.9"
                   step="0.1"
                   defaultValue={partialOdds}
                   onChange={settingsChangeHandler}

@@ -153,7 +153,6 @@ export function generateRandomRule(
 ) {
   const ruleItems = pickRandomDistinctItems(itemList.concat(allowedExtraItems), 2);
   let rule;
-
   if (ruleItems) {
     rule = {
       inr: applyPartialDescription(
