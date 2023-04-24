@@ -512,8 +512,8 @@ function App() {
         <Modal onClose={hideMenuModalHandler}>
           <h2 className={styles.text}>Menu</h2>
           <div className={styles.menucontainer}>
-            <button disabled className={styles.menuaction} onClick={showSolutionHandler}>
-              Show/Compare Solution (temporarily disabled)
+            <button className={styles.menuaction} onClick={showSolutionHandler}>
+              Show/Compare Solution
             </button>
             <button className={styles.menuaction} onClick={resetInputHandler}>
               Reset Input
