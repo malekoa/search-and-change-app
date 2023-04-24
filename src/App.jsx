@@ -290,27 +290,94 @@ function App() {
 
   function setDemo1() {
     const demo1Items = [
-      { id: "1", color: "red", shape: "circle" },
+      { id: "1", color: "green", shape: "rectangle" },
       { id: "2", color: "red", shape: "square" },
-      { id: "3", color: "blue", shape: "circle" },
-      { id: "4", color: "blue", shape: "square" },
-      { id: "5", color: "green", shape: "circle" },
-      { id: "6", color: "green", shape: "square" },
+      { id: "3", color: "green", shape: "circle" },
+      { id: "4", color: "yellow", shape: "square" },
+      { id: "5", color: "yellow", shape: "circle" },
+      { id: "6", color: "green", shape: "circle" },
+      { id: "7", color: "orange", shape: "square" },
+      { id: "8", color: "orange", shape: "rectangle" },
+      { id: "9", color: "green", shape: "circle" },
+      { id: "10", color: "orange", shape: "square" },
+      { id: "11", color: "green", shape: "triangle" },
+      { id: "12", color: "blue", shape: "triangle" },
+      { id: "13", color: "blue", shape: "rectangle" },
+      { id: "14", color: "blue", shape: "circle" },
+      { id: "15", color: "red", shape: "circle" },
+      { id: "16", color: "orange", shape: "square" },
+      { id: "17", color: "red", shape: "triangle" },
+      { id: "18", color: "yellow", shape: "square" },
+      { id: "19", color: "blue", shape: "rectangle" },
+      { id: "20", color: "orange", shape: "circle" }
     ];
     const demo1Rules = [
       {
         id: "1",
-        inr: { color: "red", shape: "circle" },
+        inr: { color: "yellow", shape: "square" },
+        trm: { color: "gray", shape: "triangle" },
+        dir: "right",
+        inp: "inr",
+        out: { color: "gray", shape: "rectangle" },
+        cnd: {
+          target: "trm",
+          value: { color: "green", shape: "triangle" },
+          exists: true,
+        },
+      },
+      {
+        id: "2",
+        inr: { color: "gray", shape: "undefined" },
         trm: { color: "red", shape: "square" },
         dir: "left",
         inp: "inr",
-        out: { color: "blue", shape: "square" },
+        out: { color: "green", shape: "undefined" },
         cnd: {
           target: "trm",
-          value: { color: "red", shape: "square" },
+          value: { color: "green", shape: "triangle" },
           exists: false,
         },
       },
+      {
+        id: "3",
+        inr: { color: "gray", shape: "circle" },
+        trm: { color: "green", shape: "undefined" },
+        dir: "left",
+        inp: "inr",
+        out: { color: "orange", shape: "triangle" },
+        cnd: {
+          target: "trm",
+          value: { color: "green", shape: "square" },
+          exists: true,
+        },
+      },
+      {
+        id: "4",
+        inr: { color: "gray", shape: "square" },
+        trm: { color: "green", shape: "undefined" },
+        dir: "left",
+        inp: "inr",
+        out: { color: "blue", shape: "undefined" },
+        cnd: {
+          target: "trm",
+          value: { color: "blue", shape: "undefined" },
+          exists: false,
+        },
+      },
+      {
+        id: "5",
+        inr: { color: "green", shape: "undefined" },
+        trm: { color: "blue", shape: "undefined" },
+        dir: "left",
+        inp: "inr",
+        out: { color: "gray", shape: "square" },
+        cnd: {
+          target: "trm",
+          value: { color: "green", shape: "triangle" },
+          exists: false,
+        },
+      },
+      
     ];
     setRules(demo1Rules);
     setItemList([...demo1Items]);
@@ -445,8 +512,8 @@ function App() {
         <Modal onClose={hideMenuModalHandler}>
           <h2 className={styles.text}>Menu</h2>
           <div className={styles.menucontainer}>
-            <button className={styles.menuaction} onClick={showSolutionHandler}>
-              Show/Compare Solution
+            <button disabled className={styles.menuaction} onClick={showSolutionHandler}>
+              Show/Compare Solution (temporarily disabled)
             </button>
             <button className={styles.menuaction} onClick={resetInputHandler}>
               Reset Input

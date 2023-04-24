@@ -77,6 +77,7 @@ export function applyPartialDescription(
     }
     if (newItem.color === "gray" && newItem.shape === "undefined" && Math.random() < 0.5) {
       newItem = {...item};
+      
     }
   }
   return newItem;
