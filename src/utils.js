@@ -75,6 +75,9 @@ export function applyPartialDescription(
     if (Math.random() < partialOdds) {
       newItem.shape = "undefined";
     }
+    if (newItem.color === "gray" && newItem.shape === "undefined" && Math.random() < 0.5) {
+      newItem = {...item};
+    }
   }
   return newItem;
 }
@@ -178,7 +181,7 @@ export function generateRandomRule(
     );
     rule.cnd = {
       target: "trm",
-      value: getItemVariation(rule.trm),
+      value: getItemVariation(rule.trm, itemList),
       exists:
         hasPartialDescription(rule.trm) && allowCondition
           ? Math.random() < 0.5
