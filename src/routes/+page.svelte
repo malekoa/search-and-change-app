@@ -62,11 +62,6 @@
 			</div>
 		</div>
 	</div>
-	<button
-		on:click={() => {
-			console.log(outputString);
-		}}>asdf</button
-	>
 	<Modal
 		active={modalIsActive}
 		{currentIndex}
