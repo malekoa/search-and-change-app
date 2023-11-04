@@ -2,25 +2,22 @@
 	import Nav from '../components/Nav.svelte';
 	import Shape from '../components/Shape.svelte';
 	import Modal from '../components/Modal.svelte';
+	import Rule from '../components/Rule.svelte';
 
 	const shapeList = ['square', 'circle', 'lozenge', 'triangle', 'star', 'hexagon', 'pentagon', 'trapezoid'];
-	const colorList = ['black', 'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'brown', 'gray'];
+	const colorList = ['black', 'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'slateblue', 'brown', 'gray'];
 
-	let ruleSet = {
-		inr: {
-			type: 'square',
-			color: 'red'
-		},
-		trm: {
-			type: 'circle',
-			color: 'gray'
-		},
-		direction: 'left',
-		output: {
-			type: 'square',
-			color: 'black'
-		}
+	let settings = {
+		minRulesetLength: 1,
+		maxRulesetLength: 5,
+		minInputStringLength: 5,
+		maxInputStringLength: 10,
+		allowPartialINR: false,
+		allowPartialTRM: false,
+		allowPartialOutput: false
 	};
+
+	let ruleSet = generateRuleSet(Math.floor(Math.random() * (settings.maxRulesetLength - settings.minRulesetLength + 1)) + settings.minRulesetLength);
 
 	let modalIsActive = false;
 	let currentIndex = 0;
@@ -39,14 +36,44 @@
 		return inputString;
 	}
 
-	let inputString = generateInputString(10);
+	function generateRule() {
+		let rule = {
+			inr: {
+				type: shapeList[Math.floor(Math.random() * shapeList.length)],
+				color: colorList[Math.floor(Math.random() * colorList.length)]
+			},
+			trm: {
+				type: shapeList[Math.floor(Math.random() * shapeList.length)],
+				color: colorList[Math.floor(Math.random() * colorList.length)]
+			},
+			direction: Math.random() < 0.5 ? 'right' : 'left',
+			output: {
+				type: shapeList[Math.floor(Math.random() * shapeList.length)],
+				color: colorList[Math.floor(Math.random() * colorList.length)]
+			}
+		};
+		return rule;
+	}
+
+	/**
+	 * @param {number} length
+	 */
+	function generateRuleSet(length) {
+		let ruleSet = [];
+		for (let i = 0; i < length; i++) {
+			ruleSet.push(generateRule());
+		}
+		return ruleSet;
+	}
+
+	let inputString = generateInputString(Math.floor(Math.random() * (settings.maxInputStringLength - settings.minInputStringLength + 1)) + settings.minInputStringLength);
 	let outputString = inputString.map((shape) => {
 		return { type: shape.type, color: shape.color };
 	});
 </script>
 
-<div class="w-full h-screen bg-gray-100 space-y-4">
-	<Nav />
+<div class="w-full space-y-4 pt-14">
+	<Nav {settings} />
 	<div class="flex flex-col w-full items-center">
 		<h1 class="font-bold text-lg">Input String</h1>
 		<div class="flex w-full justify-center">
@@ -56,49 +83,20 @@
 				{/each}
 			</div>
 		</div>
-	</div>
-	<div class="flex flex-col items-center">
-		<div class="flex flex-col justify-center items-center p-4 bg-gray-300 rounded">
-			<h1 class="font-bold text-lg">Ruleset</h1>
-			<div class="flex gap-4 items-center">
-				<div class="flex text-xl font-bold"><span>Rule 1:</span></div>
-				<div class="flex gap-4">
-					<div class="flex flex-col gap-1 items-center">
-						<div class="text-sm font-bold">INR</div>
-						<Shape type={ruleSet.inr.type} color={ruleSet.inr.color} />
-					</div>
-					<div class="flex flex-col gap-1 items-center">
-						<div class="text-sm font-bold">TRM</div>
-						<Shape type={ruleSet.trm.type} color={ruleSet.trm.color} />
-					</div>
-					<div class="flex flex-col gap-1 items-center">
-						<div class="text-sm font-bold">DIR</div>
-						<div class="flex h-full items-center justify-center font-bold">
-							{#if ruleSet.direction === 'right'}
-								<span>RIGHT</span>
-							{:else}
-								<span>LEFT</span>
-							{/if}
-						</div>
-					</div>
-					<div class="flex flex-col gap-1 items-center">
-						<div class="text-sm font-bold">INPUT</div>
-						<div class="flex h-full items-center justify-center font-bold">
-							<span>INR</span>
-						</div>
-					</div>
-					<div class="flex flex-col gap-1 items-center">
-						<div class="text-sm font-bold">OUTPUT</div>
-						<Shape type={ruleSet.output.type} color={ruleSet.output.color} />
-					</div>
-				</div>
-			</div>
-		</div>
+		<button
+			class="p-2 rounded bg-gray-300 border hover:bg-gray-400 transition duration-75 active:bg-gray-300"
+			on:click={() => {
+				inputString = generateInputString(Math.floor(Math.random() * (settings.maxInputStringLength - settings.minInputStringLength + 1)) + settings.minInputStringLength);
+				outputString = inputString.map((shape) => {
+					return { type: shape.type, color: shape.color };
+				});
+			}}>Generate New Input String</button
+		>
 	</div>
 	<div class="flex flex-col w-full items-center">
 		<h1 class="font-bold text-lg">Output String</h1>
 		<div class="flex w-full justify-center">
-			<div class="flex gap-3 p-2 overflow-x-auto">
+			<div class="flex gap-2 p-2 overflow-x-auto">
 				{#each outputString as shape, i}
 					<button
 						on:click={() => {
@@ -113,19 +111,36 @@
 				{/each}
 			</div>
 		</div>
+		<div class="flex w-full justify-center gap-4">
+			<button
+				class="p-2 bg-gray-300 rounded"
+				on:click={() => {
+					outputString = inputString.map((shape) => {
+						return { type: shape.type, color: shape.color };
+					});
+				}}>Reset</button
+			>
+			<button class="p-2 bg-green-500 text-white rounded">Submit</button>
+		</div>
 	</div>
-	<div class="flex justify-center gap-2">
-		<button
-			class="p-2 rounded bg-gray-300 border hover:bg-gray-400 transition duration-75 active:bg-gray-300"
-			on:click={() => {
-				inputString = generateInputString(10);
-				outputString = inputString.map((shape) => {
-					return { type: shape.type, color: shape.color };
-				});
-			}}>Generate New Dataset</button
-		>
-		<button class="p-2 rounded bg-gray-300 border hover:shadow transition">Generate New Ruleset</button>
+	<div class="flex flex-col items-center">
+		<div class="flex flex-col justify-center items-center p-4 bg-gray-300 rounded gap-4">
+			<div class="flex w-full items-center justify-between">
+				<h1 class="font-bold text-lg">Ruleset</h1>
+				<button
+					class="p-2 rounded bg-gray-500 hover:bg-gray-600 active:bg-gray-500 text-white hover:shadow transition duration-75"
+					on:click={() => {
+						ruleSet = generateRuleSet(Math.floor(Math.random() * (settings.maxRulesetLength - settings.minRulesetLength + 1)) + settings.minRulesetLength);
+					}}
+					>Generate New Ruleset
+				</button>
+			</div>
+			{#each ruleSet as rule}
+				<Rule {rule} number={ruleSet.indexOf(rule) + 1} />
+			{/each}
+		</div>
 	</div>
+	<div class="flex justify-center gap-2" />
 	<Modal
 		active={modalIsActive}
 		{currentIndex}

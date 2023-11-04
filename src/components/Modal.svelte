@@ -29,7 +29,7 @@
 	}
 
 	const shapeList = ['square', 'circle', 'lozenge', 'triangle', 'star', 'hexagon', 'pentagon', 'trapezoid'];
-	const colorList = ['black', 'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'brown', 'gray'];
+	const colorList = ['black', 'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'slateblue', 'brown', 'gray'];
 </script>
 
 <div class="{active ? 'flex' : 'hidden'} justify-center items-center fixed -top-4 left-0 w-full h-screen z-10 bg-gray-800 bg-opacity-60">
