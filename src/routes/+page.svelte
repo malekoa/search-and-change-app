@@ -77,7 +77,7 @@
 	<div class="flex flex-col w-full items-center">
 		<h1 class="font-bold text-lg">Input String</h1>
 		<div class="flex w-full justify-center">
-			<div class="flex gap-3 p-4 overflow-x-auto">
+			<div class="flex gap-2 p-4 overflow-x-auto">
 				{#each inputString as shape, _}
 					<Shape type={shape.type} color={shape.color} />
 				{/each}
@@ -96,7 +96,7 @@
 	<div class="flex flex-col w-full items-center">
 		<h1 class="font-bold text-lg">Output String</h1>
 		<div class="flex w-full justify-center">
-			<div class="flex gap-2 p-2 overflow-x-auto">
+			<div class="flex gap-2 p-4 overflow-x-auto">
 				{#each outputString as shape, i}
 					<button
 						on:click={() => {
@@ -104,7 +104,7 @@
 							currentIndex = i;
 							modalIsActive = true;
 						}}
-						class="p-1 border rounded hover:bg-gray-200 transition"
+						class="rounded hover:bg-gray-200 transition"
 					>
 						<Shape type={shape.type} color={shape.color} />
 					</button>
