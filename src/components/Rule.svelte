@@ -3,7 +3,8 @@
 		inr: { type: 'square', color: 'black' },
 		trm: { type: 'square', color: 'black' },
 		direction: 'right',
-		output: { type: 'square', color: 'black' }
+		output: { type: 'square', color: 'black' },
+		condition: { hasCondition: true, type: 'square', color: 'black' }
 	};
 	export let number = 1;
 	import Shape from './Shape.svelte';
@@ -39,6 +40,18 @@
 		<div class="flex flex-col gap-1 items-center">
 			<div class="text-sm font-bold">OUTPUT</div>
 			<Shape type={rule.output.type} color={rule.output.color} />
+		</div>
+		<div class="flex flex-col gap-1 items-center">
+			<div class="text-sm font-bold">CONDITION</div>
+			<!-- If rule has condition, render the condition -->
+			{#if rule.condition.hasCondition}
+				<Shape type={rule.condition.type} color={rule.condition.color} />
+				<!-- else, render NONE -->
+			{:else}
+				<div class="flex h-full items-center justify-center font-bold">
+					<span>NONE</span>
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>
