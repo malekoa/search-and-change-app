@@ -79,10 +79,20 @@
 		>
 			<i class="bi bi-lightning-charge" />
 		</button>
-		<button class="flex w-10 h-10 justify-center items-center relative bg-gray-100 border rounded hover:bg-gray-200 transition">
+		<button
+			class="flex w-10 h-10 justify-center items-center relative bg-gray-100 border rounded hover:bg-gray-200 transition"
+			on:click={() => {
+				alert('load not implemented yet');
+			}}
+		>
 			<i class="bi bi-folder text-xl" />
 		</button>
-		<button class="flex w-10 h-10 justify-center items-center relative bg-gray-100 border rounded hover:bg-gray-200 transition">
+		<button
+			class="flex w-10 h-10 justify-center items-center relative bg-gray-100 border rounded hover:bg-gray-200 transition"
+			on:click={() => {
+				alert('save not implemented yet');
+			}}
+		>
 			<i class="bi bi-floppy text-xl" />
 		</button>
 		<button class="flex w-10 h-10 justify-center items-center relative bg-gray-100 border rounded hover:bg-gray-200 transition" on:click={toggleMenu}>
@@ -104,33 +114,6 @@
 						}}
 					>
 						Reset
-					</div>
-				</div>
-				<div class="flex flex-col w-full justify-center gap-2">
-					<div class="font-bold">Input String Length</div>
-					<div class="flex w-full justify-center gap-4">
-						<div>
-							<span>Minimum:</span>
-							<input
-								type="number"
-								class="p-1 w-20 rounded"
-								bind:value={settings.minInputStringLength}
-								on:change={() => {
-									validateLengths();
-								}}
-							/>
-						</div>
-						<div>
-							<span>Maximum:</span>
-							<input
-								type="number"
-								class="p-1 w-20 rounded"
-								bind:value={settings.maxInputStringLength}
-								on:change={() => {
-									validateLengths();
-								}}
-							/>
-						</div>
 					</div>
 				</div>
 				<div class="flex flex-col w-full justify-center gap-2">

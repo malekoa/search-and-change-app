@@ -157,15 +157,15 @@
 							s[i] = { type: rule.output.type, color: rule.output.color };
 							if (stringIsInArray(s, stepTracker)) {
 								console.log('loop detected: ', s);
-								alert('Loop detected: String/Ruleset pair has no solution. See console for details.');
-								return s;
+								// alert('Loop detected: String/Ruleset pair has no solution. See console for details.');
+								return stepTracker;
 							} else {
 								stepTracker.push(
 									s.map((shape) => {
 										return { type: shape.type, color: shape.color };
 									})
 								);
-								console.log(stepTracker);
+								// console.log(stepTracker);
 								shouldBreak = false;
 							}
 						}
@@ -177,7 +177,7 @@
 			}
 		}
 		// console.log('done solving');
-		return s;
+		return stepTracker;
 	}
 
 	function stringIsInArray(string: { type: string; color: string }[], arr: { type: string; color: string }[][]) {
@@ -201,22 +201,50 @@
 		return true;
 	}
 
+	function generateValidProblem() {
+		let iterations = 0;
+		while (true) {
+			iterations += 1;
+			let inputString = generateInputString(Math.floor(Math.random() * (settings.maxInputStringLength - settings.minInputStringLength + 1)) + settings.minInputStringLength);
+			let ruleSet = generateRuleSet(Math.floor(Math.random() * (settings.maxRulesetLength - settings.minRulesetLength + 1)) + settings.minRulesetLength);
+			if (settings.allowPartialINR && Math.random() > 0.25) {
+				Math.random() > 0.5 ? (ruleSet[0].inr.type = 'any') : (ruleSet[0].inr.color = 'gray');
+			}
+			if (settings.allowPartialTRM && Math.random() > 0.25) {
+				Math.random() > 0.5 ? (ruleSet[0].trm.type = 'any') : (ruleSet[0].trm.color = 'gray');
+			}
+			let o = solve(inputString, ruleSet);
+			if (o.length >= settings.lightningChangesMin) {
+				console.log('generated valid problem in ' + iterations + ' tries');
+				return { validInputString: inputString, validRuleSet: ruleSet };
+			}
+		}
+	}
+
 	function lightning() {
 		// lightning will generate a random string, then generate rulesets until it finds one that
 		// let { testInputString, testRuleSet } = generateValidProblem();
-		inputString = generateInputString(Math.floor(Math.random() * (settings.maxInputStringLength - settings.minInputStringLength + 1)) + settings.minInputStringLength);
-		ruleSet = generateRuleSet(Math.floor(Math.random() * (settings.maxRulesetLength - settings.minRulesetLength + 1)) + settings.minRulesetLength);
-		let o = solve(inputString, ruleSet);
-		let i = 0;
-		while (stringsAreEqual(inputString, o)) {
-			ruleSet = generateRuleSet(Math.floor(Math.random() * (settings.maxRulesetLength - settings.minRulesetLength + 1)) + settings.minRulesetLength);
-			o = solve(inputString, ruleSet);
-			i++;
-		}
-		console.log('generated valid problem after ' + i + ' tries');
-		outputString = inputString.map((shape) => {
+		// inputString = generateInputString(Math.floor(Math.random() * (settings.maxInputStringLength - settings.minInputStringLength + 1)) + settings.minInputStringLength);
+		// ruleSet = generateRuleSet(Math.floor(Math.random() * (settings.maxRulesetLength - settings.minRulesetLength + 1)) + settings.minRulesetLength);
+		// let i = 0;
+		// while (true) {
+		// 	let o = solve(inputString, ruleSet);
+		// 	if (o.length >= settings.lightningChangesMin) {
+		// 		break;
+		// 	}
+		// 	inputString = generateInputString(Math.floor(Math.random() * (settings.maxInputStringLength - settings.minInputStringLength + 1)) + settings.minInputStringLength);
+		// 	i++;
+		// }
+		// console.log('generated valid problem after ' + i + ' tries');
+		// outputString = inputString.map((shape) => {
+		// 	return { type: shape.type, color: shape.color };
+		// });
+		let { validInputString, validRuleSet } = generateValidProblem();
+		inputString = validInputString;
+		outputString = validInputString.map((shape) => {
 			return { type: shape.type, color: shape.color };
 		});
+		ruleSet = validRuleSet;
 	}
 </script>
 
@@ -282,11 +310,19 @@
 					});
 				}}>Reset</button
 			>
-			<button class="p-2 bg-green-500 text-white rounded">Submit</button>
+			<button
+				class="p-2 bg-green-500 text-white rounded"
+				on:click={() => {
+					alert('Submit not implemented yet.');
+				}}>Submit</button
+			>
 			<button
 				class="p-2 bg-red-500 text-white rounded"
 				on:click={() => {
-					outputString = solve(inputString, ruleSet);
+					let o = solve(inputString, ruleSet);
+					if (o.length > 0) {
+						outputString = o[o.length - 1];
+					}
 				}}>Solve</button
 			>
 		</div>
