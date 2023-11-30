@@ -42,7 +42,7 @@
 			<svg viewBox="0 0 100 100" {width} {height}>
 				<polygon points="25 0 75 0 100 100 0 100" fill={color} />
 			</svg>
-		{:else if type === 'blob'}
+		{:else if type === 'any'}
 			<svg viewBox="0 0 200 200" {width} {height}>
 				<path
 					fill={color}
