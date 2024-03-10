@@ -79,7 +79,7 @@
 		>
 			<i class="bi bi-lightning-charge" />
 		</button>
-		<button
+		<!-- <button
 			class="flex w-10 h-10 justify-center items-center relative bg-gray-100 border rounded hover:bg-gray-200 transition"
 			on:click={() => {
 				alert('load not implemented yet');
@@ -94,7 +94,7 @@
 			}}
 		>
 			<i class="bi bi-floppy text-xl" />
-		</button>
+		</button> -->
 		<button class="flex w-10 h-10 justify-center items-center relative bg-gray-100 border rounded hover:bg-gray-200 transition" on:click={toggleMenu}>
 			<i class="bi bi-gear text-xl" />
 			<div class="fixed {menuIsOpen ? 'flex flex-col' : 'hidden'} p-4 top-14 right-0 bg-gray-100 w-screen sm:w-96 rounded-bl rounded-br border-b border-r border-l hover:cursor-default items-start z-10 gap-2" on:click={handleDivClick} role="button" tabindex="0" on:keydown={handleDivClick}>

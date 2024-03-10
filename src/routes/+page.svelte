@@ -3,6 +3,9 @@
 	import Shape from '../components/Shape.svelte';
 	import Modal from '../components/Modal.svelte';
 	import Rule from '../components/Rule.svelte';
+	import InputModal from '../components/InputModal.svelte';
+	import RuleModal from '../components/RuleModal.svelte';
+	import StepsModal from '../components/StepsModal.svelte';
 
 	const shapeList = ['square', 'circle', 'lozenge', 'triangle', 'star', 'hexagon', 'pentagon', 'trapezoid', 'any'];
 	const colorList = ['black', 'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'slateblue', 'brown', 'gray'];
@@ -25,7 +28,11 @@
 	});
 
 	let modalIsActive = false;
+	let inputModalIsActive = false;
 	let currentIndex = 0;
+	let inputModalIndex = 0;
+	let ruleModalIsActive = false;
+	let stepsModalIsActive = false;
 
 	function generateInputString(length: number) {
 		let inputString = [];
@@ -41,11 +48,6 @@
 				color: colorListWithNoGray[Math.floor(Math.random() * colorListWithNoGray.length)]
 			});
 		}
-
-		// inputString = [
-		// 	{ type: 'circle', color: 'red' },
-		// 	{ type: 'circle', color: 'black' }
-		// ];
 
 		return inputString;
 	}
@@ -110,19 +112,6 @@
 		for (let i = 0; i < length; i++) {
 			ruleSet.push(generateRule(settings.allowPartialINR, settings.allowPartialTRM, settings.allowPartialOutput));
 		}
-		// ruleSet[0].inr = { type: 'circle', color: 'red' };
-		// ruleSet[0].trm = { type: 'circle', color: 'black' };
-		// ruleSet[0].output = { type: 'circle', color: 'orange' };
-		// ruleSet[0].direction = 'right';
-
-		// ruleSet.push({
-		// 	inr: { type: 'circle', color: 'orange' },
-		// 	trm: { type: 'circle', color: 'black' },
-		// 	direction: 'right',
-		// 	output: { type: 'circle', color: 'red' },
-		// 	condition: { hasCondition: false, type: '', color: '' }
-		// });
-
 		return ruleSet;
 	}
 
@@ -157,7 +146,7 @@
 							s[i] = { type: rule.output.type, color: rule.output.color };
 							if (stringIsInArray(s, stepTracker)) {
 								console.log('loop detected: ', s);
-								// alert('Loop detected: String/Ruleset pair has no solution. See console for details.');
+								alert('Loop detected: String/Ruleset pair has no solution. See console for details.');
 								return stepTracker;
 							} else {
 								stepTracker.push(
@@ -222,23 +211,7 @@
 	}
 
 	function lightning() {
-		// lightning will generate a random string, then generate rulesets until it finds one that
-		// let { testInputString, testRuleSet } = generateValidProblem();
-		// inputString = generateInputString(Math.floor(Math.random() * (settings.maxInputStringLength - settings.minInputStringLength + 1)) + settings.minInputStringLength);
-		// ruleSet = generateRuleSet(Math.floor(Math.random() * (settings.maxRulesetLength - settings.minRulesetLength + 1)) + settings.minRulesetLength);
-		// let i = 0;
-		// while (true) {
-		// 	let o = solve(inputString, ruleSet);
-		// 	if (o.length >= settings.lightningChangesMin) {
-		// 		break;
-		// 	}
-		// 	inputString = generateInputString(Math.floor(Math.random() * (settings.maxInputStringLength - settings.minInputStringLength + 1)) + settings.minInputStringLength);
-		// 	i++;
-		// }
-		// console.log('generated valid problem after ' + i + ' tries');
-		// outputString = inputString.map((shape) => {
-		// 	return { type: shape.type, color: shape.color };
-		// });
+		// finds a valid problem and sets the inputString, outputString, and ruleSet to the valid problem
 		let { validInputString, validRuleSet } = generateValidProblem();
 		inputString = validInputString;
 		outputString = validInputString.map((shape) => {
@@ -253,18 +226,36 @@
 	<div class="flex flex-col w-full items-center">
 		<div class="flex gap-2 items-center">
 			<h1 class="font-bold text-lg">Input String</h1>
-			<button
-				class="px-2 py-1 bg-gray-100 border hover:bg-gray-200 rounded transition"
-				on:click={() => {
-					alert('Custom input strings not implemented yet.');
-				}}><i class="bi bi-pencil" /></button
-			>
 		</div>
 		<div class="flex w-full justify-center">
 			<div class="flex gap-2 p-4 overflow-x-auto">
-				{#each inputString as shape, _}
-					<Shape type={shape.type} color={shape.color} />
+				{#each inputString as shape, index}
+					<button
+						on:click={() => {
+							console.log(`clicked index ${index}`);
+							inputModalIndex = index;
+							inputModalIsActive = true;
+						}}
+					>
+						<Shape type={shape.type} color={shape.color} />
+					</button>
 				{/each}
+				<div class="flex justify-center items-center w-12">
+					<button
+						class="flex justify-center items-center w-10 h-10 border rounded-full hover:bg-gray-200 transition active:bg-gray-100"
+						on:click={() => {
+							inputString = [
+								...inputString,
+								{
+									type: shapeList[Math.floor(Math.random() * shapeList.length)],
+									color: colorList[Math.floor(Math.random() * colorList.length)]
+								}
+							];
+						}}
+					>
+						<i class="bi bi-plus-lg" />
+					</button>
+				</div>
 			</div>
 		</div>
 		<!-- <button
@@ -313,17 +304,26 @@
 			<button
 				class="p-2 bg-green-500 text-white rounded"
 				on:click={() => {
-					alert('Submit not implemented yet.');
+					let o = solve(inputString, ruleSet);
+					if (o.length > 0) {
+						// check if the outputString is the same as the last step in the solution
+						if (stringsAreEqual(outputString, o[o.length - 1])) {
+							alert('Correct!');
+						} else {
+							alert('Incorrect');
+						}
+					}
 				}}>Submit</button
 			>
 			<button
 				class="p-2 bg-red-500 text-white rounded"
 				on:click={() => {
+					stepsModalIsActive = true;
 					let o = solve(inputString, ruleSet);
 					if (o.length > 0) {
 						outputString = o[o.length - 1];
 					}
-				}}>Solve</button
+				}}>Show Derivation</button
 			>
 		</div>
 	</div>
@@ -334,7 +334,7 @@
 				<button
 					class="px-2 py-1 rounded bg-gray-100 border hover:bg-gray-200 hover:shadow transition duration-75"
 					on:click={() => {
-						alert('Custom rulesets not implemented yet.');
+						ruleModalIsActive = true;
 					}}
 				>
 					<i class="bi bi-pencil" />
@@ -385,6 +385,39 @@
 		on:confirm={(event) => {
 			modalIsActive = false;
 			outputString = event.detail;
+		}}
+	/>
+	<InputModal
+		{inputString}
+		editIndex={inputModalIndex}
+		active={inputModalIsActive}
+		on:delete={() => {
+			inputModalIsActive = false;
+			inputString.splice(inputModalIndex, 1);
+		}}
+		on:confirm={(event) => {
+			inputString = event.detail;
+			inputModalIsActive = false;
+			console.log(inputString);
+		}}
+	/>
+	<RuleModal
+		{ruleSet}
+		active={ruleModalIsActive}
+		on:delete={(event) => {
+			ruleSet = event.detail;
+		}}
+		on:confirm={(event) => {
+			ruleSet = event.detail;
+			ruleModalIsActive = false;
+		}}
+	/>
+	<StepsModal
+		active={stepsModalIsActive}
+		{inputString}
+		steps={solve(inputString, ruleSet)}
+		on:close={() => {
+			stepsModalIsActive = false;
 		}}
 	/>
 </div>
