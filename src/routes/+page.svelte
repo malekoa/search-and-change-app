@@ -312,6 +312,8 @@
 						} else {
 							alert('Incorrect');
 						}
+					} else {
+						alert('Correct!');
 					}
 				}}>Submit</button
 			>
