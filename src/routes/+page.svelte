@@ -236,6 +236,7 @@
 							inputModalIndex = index;
 							inputModalIsActive = true;
 						}}
+						class="rounded hover:bg-gray-200 transition"
 					>
 						<Shape type={shape.type} color={shape.color} />
 					</button>
